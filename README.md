@@ -68,7 +68,7 @@ TODO : Requirements
 > The NightShiftVault.uplugin works has a container for all the other plugins
 > You can always pick and choose what your project needs! Keep in mind that some plugins might have dependencies from other plugins!
 
-<div> <img width="75%" src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Git/PluginSetup.png" alt="LOTR"> </div>
+<div> <img width="100%" src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Git/PluginSetup.png" alt="LOTR"> </div>
  
 ## ❤️ Credits
 
