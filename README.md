@@ -32,26 +32,42 @@
 > [!IMPORTANT]  
 > Requests are open! Feel free to ask for stuff that you and others would benefit from!
   
-<table>
-<tr>
-<td>
+<div align="center">
+📦 Current on-going : Neural Networks & Utility AI 📦
+</div>
 
-<p align="center">
-TODO : Plugin Categories Graph
-TODO : Current on going plugin
-</p>
+<div align="left">
+Algorithms: 🟨🟨 
+<br>Gameplay: 🟧🟧🟧
+<br>Tools: 🟩🟩🟩
+<br>Visuals: 🟦🟦🟦
+<br>Utilities: 🟪
+</div>
 
-</td>
-</tr>
-</table>
 
 ## 📦 Features
+Vault:
+- Algorithms
+-- Neural Network (To Add)
+-- Utility AI (To Add)
 
-TODO : Feature list
+- Gameplay
+-- Achievements (To Add)
+-- Interaction
+-- Save System (To Add)
+
+- Tools
+-- DebugConsole (To Add)
+-- Dialogue Editor (To Add)
+-- Project Maid (To Add)
+
+- Visuals
+-- Text Animations (To Add)
+-- Tween Animations
 
 ## ⚙️ Requirements
 
-TODO : Requirements
+Unreal Engine 5.2+
 
 ## 🛠️ Installation
 
