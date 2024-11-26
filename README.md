@@ -46,7 +46,7 @@
 ## 📦 Features
 <table>
   <tr>
-    <th>Algorithms</th>
+    <th>AI</th>
     <td>Neural Network Gym</td>
     <td>Utility AI</td>
   </tr>
