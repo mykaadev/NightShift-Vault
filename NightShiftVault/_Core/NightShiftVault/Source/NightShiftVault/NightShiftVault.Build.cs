@@ -1,10 +1,10 @@
-﻿// Copyright © 2024 mykaa. All rights reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
-public class NsTween : ModuleRules
+public class NightShiftVault : ModuleRules
 {
-    public NsTween(ReadOnlyTargetRules Target) : base(Target)
+    public NightShiftVault(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -27,6 +27,27 @@ public class NsTween : ModuleRules
             {
                 "Core",
                 // ... add other public dependencies that you statically link with here ...
+
+                //~ Begin Night Shift Vault
+                // Algorithms
+                "NsNeuralNetwork",
+                "NsUtilityAI",
+
+                // Gameplay
+                "NsAchievement",
+                "NsFeedback",
+                "NsInteraction",
+                "NsSaveWizard",
+
+                // Debug
+                "NsConsole",
+                "NsDialogue",
+                "NsProjectMaid",
+
+                // Visuals
+                "NsTextFlow",
+                "NsTween",
+                //~ Begin Night Shift Vault
             }
         );
 
@@ -40,6 +61,7 @@ public class NsTween : ModuleRules
                 // ... add private dependencies that you statically link with here ...
             }
         );
+
 
         DynamicallyLoadedModuleNames.AddRange(
             new string[]
