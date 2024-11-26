@@ -19,12 +19,12 @@
 </div>
       
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#requirements">Requirements</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#support">Support</a> •
-  <a href="#license">License</a>
+  <a href="#-features">Features</a> •
+  <a href="#-requirements">Requirements</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-credits">Credits</a> •
+  <a href="#-support">Support</a> •
+  <a href="#-license">License</a>
 </p>
 
 ## 👀 Summary
