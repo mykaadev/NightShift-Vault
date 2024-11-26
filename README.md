@@ -31,39 +31,48 @@
 
 > [!IMPORTANT]  
 > Requests are open! Feel free to ask for stuff that you and others would benefit from!
-  
-<div align="center">
-📦 Current on-going : Neural Networks & Utility AI 📦
-</div>
 
+## 📦 Vault Distribution
 <div align="left">
-Algorithms: 🟨🟨 
+<b>On-Going: Neural Networks & Utility AI</b>
+<br>
+<br>Algorithms: 🟨🟨 
 <br>Gameplay: 🟧🟧🟧
 <br>Tools: 🟩🟩🟩
 <br>Visuals: 🟦🟦🟦
 <br>Utilities: 🟪
 </div>
 
-
 ## 📦 Features
-Vault:
-- Algorithms
--- Neural Network (To Add)
--- Utility AI (To Add)
-
-- Gameplay
--- Achievements (To Add)
--- Interaction
--- Save System (To Add)
-
-- Tools
--- DebugConsole (To Add)
--- Dialogue Editor (To Add)
--- Project Maid (To Add)
-
-- Visuals
--- Text Animations (To Add)
--- Tween Animations
+<table>
+  <tr>
+    <th>Algorithms</th>
+    <td>Neural Network Gym</td>
+    <td>Utility AI</td>
+  </tr>
+  <tr>
+    <th>Gameplay</th>
+    <td>Achievements</td>
+    <td>Interaction</td>
+    <td>Save System</td>
+  </tr>
+  <tr>
+    <th>Tools</th>
+    <td>Debug Console</td>
+    <td>Dialogue Editor </td>
+    <td>Project Maid</td>
+  </tr>
+  <tr>
+    <th>Visuals</th>
+    <td>Text Animations</td>
+    <td>Dialogue Editor</td>
+    <td>Tween Animations</td>
+  </tr>
+    <tr>
+    <th>Utility</th>
+    <td>Feedback</td>
+  </tr>
+</table>
 
 ## ⚙️ Requirements
 
