@@ -40,7 +40,7 @@
 <br>Gameplay: 🟧🟧🟧
 <br>Tools: 🟩🟩🟩
 <br>Visuals: 🟦🟦🟦
-<br>Utilities: 🟪
+<br>Utilities: 🟪🟪
 </div>
 
 ## 📦 Features
@@ -71,6 +71,7 @@
     <tr>
     <th>Utility</th>
     <td>Feedback</td>
+    <td>Screen Recorder</td>
   </tr>
 </table>
 
