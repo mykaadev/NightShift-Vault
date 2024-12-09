@@ -39,8 +39,8 @@
 <br>Algorithms: 🟨🟨 
 <br>Gameplay: 🟧🟧🟧
 <br>Tools: 🟩🟩🟩
-<br>Visuals: 🟦🟦🟦
-<br>Utilities: 🟪🟪🟪
+<br>Visuals: 🟦🟦
+<br>Utilities: 🟪🟪🟪🟪
 </div>
 
 ## 📦 Features
@@ -64,15 +64,15 @@
   </tr>
   <tr>
     <th>Visuals</th>
-    <td>Text Animations</td>
-    <td>Dialogue Editor</td>
+    <td>Text Animation</td>
     <td>Tween Animations</td>
   </tr>
     <tr>
     <th>Utility</th>
     <td>Neural Framework</td>
-    <td>Feedback</td>
+    <td>Wave Function Collapse</td>
     <td>Screen Recorder</td>
+    <td>Feedback</td>
   </tr>
 </table>
 
