@@ -40,14 +40,14 @@
 <br>Gameplay: 🟧🟧🟧
 <br>Tools: 🟩🟩🟩
 <br>Visuals: 🟦🟦🟦
-<br>Utilities: 🟪🟪
+<br>Utilities: 🟪🟪🟪
 </div>
 
 ## 📦 Features
 <table>
   <tr>
     <th>AI</th>
-    <td>Neural Network Gym</td>
+    <td>Neural Networks</td>
     <td>Utility AI</td>
   </tr>
   <tr>
@@ -70,6 +70,7 @@
   </tr>
     <tr>
     <th>Utility</th>
+    <td>Neural Framework</td>
     <td>Feedback</td>
     <td>Screen Recorder</td>
   </tr>
