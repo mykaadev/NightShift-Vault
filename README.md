@@ -46,7 +46,7 @@ Utilities: 🟪🟪🟪🟪
   <tr>
     <th>AI</th>
     <td>Genetic Algorithms</td>
-    <td>Utility AI ⚡</td>
+    <td>Utility AI</td>
   </tr>
   <tr>
     <th>Gameplay</th>
@@ -62,7 +62,7 @@ Utilities: 🟪🟪🟪🟪
   </tr>
   <tr>
     <th>Visuals</th>
-    <td>Text Animation 🪛</td>
+    <td>Text Animation ⚡</td>
     <td>Tween Animations</td>
   </tr>
     <tr>
