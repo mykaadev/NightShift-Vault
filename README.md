@@ -47,32 +47,32 @@
 <table>
   <tr>
     <th>AI</th>
-    <td>Neural Networks</td>
-    <td>Utility AI</td>
+    <td>Genetic Algorithms</td>
+    <td>Utility AI 🪛</td>
   </tr>
   <tr>
     <th>Gameplay</th>
-    <td>Achievements</td>
+    <td>Achievements 🪛</td>
     <td>Interaction</td>
-    <td>Save System</td>
+    <td>Save System 🪛</td>
   </tr>
   <tr>
     <th>Tools</th>
-    <td>Debug Console</td>
-    <td>Dialogue Editor </td>
-    <td>Project Maid</td>
+    <td>Debug Console 🪛</td>
+    <td>Dialogue Editor 🪛</td>
+    <td>Project Maid 🪛</td>
   </tr>
   <tr>
     <th>Visuals</th>
-    <td>Text Animation</td>
+    <td>Text Animation 🪛</td>
     <td>Tween Animations</td>
   </tr>
     <tr>
     <th>Utility</th>
     <td>Neural Framework</td>
-    <td>Wave Function Collapse</td>
-    <td>Screen Recorder</td>
-    <td>Feedback</td>
+    <td>Wave Function Collapse 🪛</td>
+    <td>Screen Recorder 🪛</td>
+    <td>Feedback 🪛</td>
   </tr>
 </table>
 
