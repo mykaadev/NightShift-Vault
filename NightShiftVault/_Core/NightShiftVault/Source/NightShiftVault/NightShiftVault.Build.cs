@@ -30,7 +30,7 @@ public class NightShiftVault : ModuleRules
 
                 //~ Begin Night Shift Vault
                 // Algorithms
-                "NsNeuralNetwork",
+                "NsNeuralFramework",
                 "NsUtilityAI",
 
                 // Gameplay
