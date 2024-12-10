@@ -23,7 +23,7 @@
 	"Plugins":
 	[
 		{
-			"Name": "NsNeuralNetwork",
+			"Name": "NsNeuralFramework",
 			"Enabled": true
 		},
 		{
