@@ -34,7 +34,6 @@
 
 ## 📦 Vault Distribution
 <div align="left">
-<b>On-Going: Neural Networks & Utility AI</b>
 <br>
 <br>Algorithms: 🟨🟨 
 <br>Gameplay: 🟧🟧🟧
@@ -48,13 +47,13 @@
   <tr>
     <th>AI</th>
     <td>Genetic Algorithms</td>
-    <td>Utility AI 🪛</td>
+    <td>Utility AI ⚡</td>
   </tr>
   <tr>
     <th>Gameplay</th>
-    <td>Achievements 🪛</td>
+    <td>Achievements ⚡</td>
     <td>Interaction</td>
-    <td>Save System 🪛</td>
+    <td>Save Wizard ⚡</td>
   </tr>
   <tr>
     <th>Tools</th>
@@ -75,6 +74,9 @@
     <td>Feedback 🪛</td>
   </tr>
 </table>
+<div align="center">
+  <p>🪛 Cleaning Up •⚡In Progess</p>
+</div>
 
 ## ⚙️ Requirements
 
