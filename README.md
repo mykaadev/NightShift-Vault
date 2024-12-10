@@ -16,9 +16,8 @@
     <img src="https://img.shields.io/github/stars/mykaadev/NightShift-Vault?style=plastic&logo=github" alt="GitHub X">
  <a href="https://twitter.com/mykaadev/">
     <img src="https://img.shields.io/twitter/follow/mykaadev?style=plastic&logo=x" alt="GitHub X">
-</div>
       
-<p align="center" style="display = "none"">
+<p style="display = "none">
   <a href="#-features">📦 Features</a> •
   <a href="#-requirements">⚙️ Requirements</a> •
   <a href="#-installation">🛠️ Installation</a> •
@@ -26,9 +25,11 @@
   <a href="#-support">📞 Support</a> •
   <a href="#-license">📃 License</a>
 </p>
+<a href="https://buymeacoffee.com/mykaadev"><img src="https://www.svgrepo.com/show/476855/coffee-to-go.svg" alt="Coffee" width=50px"></a>
+<p><b>Buy me a coffee!</b></p>
+</div>
 
 ## 👀 Summary
-
 > [!IMPORTANT]  
 > Requests are open! Feel free to ask for stuff that you and others would benefit from!
 
@@ -78,11 +79,9 @@ Utilities: 🟪🟪🟪🟪
 </div>
 
 ## ⚙️ Requirements
-
 Unreal Engine 5.2+
 
 ## 🛠️ Installation
-
 ##### Downloading and installing steps:
 
 1. **[Download](https://github.com/mykaadev/NightShift-Vault/releases)** the latest version of the config.
@@ -99,18 +98,13 @@ Unreal Engine 5.2+
 <div> <img width="100%" src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Git/PluginSetup.png" alt="LOTR"> </div>
  
 ## ❤️ Credits
-
 > [!IMPORTANT]  
 > Be part of the project! Request stuff! Add stuff!
 
-<a href="https://github.com/mykaadev/NightShift-Vault/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=mykaadev/NightShift-Vault"/>
-</a>
+<a href="https://github.com/mykaadev/NightShift-Vault/graphs/contributors"><img src="https://contrib.rocks/image?repo=mykaadev/NightShift-Vault"/></a>
 
 ## 📞 Support
-
 Reach out to me via the **[profile addresses](https://github.com/mykaadev)**.
 
 ## 📃 License
-
 [![License](https://img.shields.io/badge/license-MIT-green)](https://www.tldrlegal.com/license/mit-license)
