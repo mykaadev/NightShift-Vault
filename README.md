@@ -18,13 +18,13 @@
     <img src="https://img.shields.io/twitter/follow/mykaadev?style=plastic&logo=x" alt="GitHub X">
 </div>
       
-<p align="center">
-  <a href="#-features">Features</a> •
-  <a href="#-requirements">Requirements</a> •
-  <a href="#-installation">Installation</a> •
-  <a href="#-credits">Credits</a> •
-  <a href="#-support">Support</a> •
-  <a href="#-license">License</a>
+<p align="center" style="display = "none"">
+  <a href="#-features">📦 Features</a> •
+  <a href="#-requirements">⚙️ Requirements</a> •
+  <a href="#-installation">🛠️ Installation</a> •
+  <a href="#-credits">❤️ Credits</a> •
+  <a href="#-support">📞 Support</a> •
+  <a href="#-license">📃 License</a>
 </p>
 
 ## 👀 Summary
@@ -113,4 +113,4 @@ Reach out to me via the **[profile addresses](https://github.com/mykaadev)**.
 
 ## 📃 License
 
-[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-lightgrey.svg)](https://tldrlegal.com/license/creative-commons-cc0-1.0-universal)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://www.tldrlegal.com/license/mit-license)
