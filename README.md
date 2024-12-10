@@ -34,12 +34,11 @@
 
 ## 📦 Vault Distribution
 <div align="left">
-<br>
-<br>Algorithms: 🟨🟨 
-<br>Gameplay: 🟧🟧🟧
-<br>Tools: 🟩🟩🟩
-<br>Visuals: 🟦🟦
-<br>Utilities: 🟪🟪🟪🟪
+Algorithms: 🟨🟨<br> 
+Gameplay: 🟧🟧🟧<br>
+Tools: 🟩🟩🟩<br>
+Visuals: 🟦🟦<br>
+Utilities: 🟪🟪🟪🟪
 </div>
 
 ## 📦 Features
