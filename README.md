@@ -16,71 +16,72 @@
     <img src="https://img.shields.io/github/stars/mykaadev/NightShift-Vault?style=plastic&logo=github" alt="GitHub X">
  <a href="https://twitter.com/mykaadev/">
     <img src="https://img.shields.io/twitter/follow/mykaadev?style=plastic&logo=x" alt="GitHub X">
-</div>
       
-<p align="center">
-  <a href="#-features">Features</a> •
-  <a href="#-requirements">Requirements</a> •
-  <a href="#-installation">Installation</a> •
-  <a href="#-credits">Credits</a> •
-  <a href="#-support">Support</a> •
-  <a href="#-license">License</a>
+<p style="display = "none">
+  <a href="#-features">📦 Features</a> •
+  <a href="#-requirements">⚙️ Requirements</a> •
+  <a href="#-installation">🛠️ Installation</a> •
+  <a href="#-credits">❤️ Credits</a> •
+  <a href="#-support">📞 Support</a> •
+  <a href="#-license">📃 License</a>
 </p>
+<a href="https://buymeacoffee.com/mykaadev"><img src="https://www.svgrepo.com/show/476855/coffee-to-go.svg" alt="Coffee" width=50px"></a>
+<p><b>Buy me a coffee!</b></p>
+</div>
 
 ## 👀 Summary
-
 > [!IMPORTANT]  
 > Requests are open! Feel free to ask for stuff that you and others would benefit from!
 
 ## 📦 Vault Distribution
 <div align="left">
-<b>On-Going: Neural Networks & Utility AI</b>
-<br>
-<br>Algorithms: 🟨🟨 
-<br>Gameplay: 🟧🟧🟧
-<br>Tools: 🟩🟩🟩
-<br>Visuals: 🟦🟦🟦
-<br>Utilities: 🟪🟪
+Algorithms: 🟨🟨<br> 
+Gameplay: 🟧🟧🟧<br>
+Tools: 🟩🟩🟩<br>
+Visuals: 🟦🟦<br>
+Utilities: 🟪🟪🟪🟪
 </div>
 
 ## 📦 Features
 <table>
   <tr>
     <th>AI</th>
-    <td>Neural Network Gym</td>
+    <td>Genetic Algorithms</td>
     <td>Utility AI</td>
   </tr>
   <tr>
     <th>Gameplay</th>
-    <td>Achievements</td>
+    <td>Achievements ⚡</td>
     <td>Interaction</td>
-    <td>Save System</td>
+    <td>Save Wizard ⚡</td>
   </tr>
   <tr>
     <th>Tools</th>
-    <td>Debug Console</td>
-    <td>Dialogue Editor </td>
-    <td>Project Maid</td>
+    <td>Debug Console 🪛</td>
+    <td>Dialogue Editor 🪛</td>
+    <td>Project Maid 🪛</td>
   </tr>
   <tr>
     <th>Visuals</th>
-    <td>Text Animations</td>
-    <td>Dialogue Editor</td>
+    <td>Text Animation ⚡</td>
     <td>Tween Animations</td>
   </tr>
     <tr>
     <th>Utility</th>
-    <td>Feedback</td>
-    <td>Screen Recorder</td>
+    <td>Neural Framework</td>
+    <td>Wave Function Collapse 🪛</td>
+    <td>Screen Recorder 🪛</td>
+    <td>Feedback 🪛</td>
   </tr>
 </table>
+<div align="center">
+  <p>🪛 Cleaning Up •⚡In Progess</p>
+</div>
 
 ## ⚙️ Requirements
-
 Unreal Engine 5.2+
 
 ## 🛠️ Installation
-
 ##### Downloading and installing steps:
 
 1. **[Download](https://github.com/mykaadev/NightShift-Vault/releases)** the latest version of the config.
@@ -97,18 +98,13 @@ Unreal Engine 5.2+
 <div> <img width="100%" src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Git/PluginSetup.png" alt="LOTR"> </div>
  
 ## ❤️ Credits
-
 > [!IMPORTANT]  
 > Be part of the project! Request stuff! Add stuff!
 
-<a href="https://github.com/mykaadev/NightShift-Vault/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=mykaadev/NightShift-Vault"/>
-</a>
+<a href="https://github.com/mykaadev/NightShift-Vault/graphs/contributors"><img src="https://contrib.rocks/image?repo=mykaadev/NightShift-Vault"/></a>
 
 ## 📞 Support
-
 Reach out to me via the **[profile addresses](https://github.com/mykaadev)**.
 
 ## 📃 License
-
-[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-lightgrey.svg)](https://tldrlegal.com/license/creative-commons-cc0-1.0-universal)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://www.tldrlegal.com/license/mit-license)
