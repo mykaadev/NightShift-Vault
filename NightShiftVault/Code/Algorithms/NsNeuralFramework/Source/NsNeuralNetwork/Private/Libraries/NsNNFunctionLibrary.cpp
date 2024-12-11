@@ -2,18 +2,18 @@
 
 #include "Libraries/NsNNFunctionLibrary.h"
 
-APawn* UNsNNFunctionLibrary::SpawnAgentFromClass(const UObject* const InWorldContextObject, const TSubclassOf<APawn> InPawnClass, const TSubclassOf<AController> InController, const FVector& Location, const FRotator& Rotation,  AActor* const Owner)
+APawn* UNsNNFunctionLibrary::SpawnAgentFromClass(const UObject* const InWorldContextObject, UClass* const InPawnClass, UClass* const InController, const FVector& Location, const FRotator& Rotation, AActor* const Owner)
 {
     APawn* Agent = nullptr;
     if (GEngine != nullptr)
     {
         UWorld* const World = GEngine->GetWorldFromContextObject(InWorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
-        if (World != nullptr && *InPawnClass)
+        if (World != nullptr && InPawnClass != nullptr)
         {
             FActorSpawnParameters ActorSpawnParams;
             ActorSpawnParams.Owner = Owner;
             ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-            Agent = World->SpawnActor<APawn>(*InPawnClass, Location, Rotation, ActorSpawnParams);
+            Agent = World->SpawnActor<APawn>(InPawnClass, Location, Rotation, ActorSpawnParams);
 
             if (Agent != nullptr && Agent->Controller == nullptr && InController != nullptr)
             {
@@ -41,11 +41,11 @@ FString UNsNNFunctionLibrary::CompressGenotype(const TArray<float>& InGenotype)
     for (const float Value : InGenotype)
     {
         // Scale the float by 10000 and convert to an integer
-        ScaledValues.Add(FMath::RoundToInt(Value * 10000));
+        ScaledValues.Emplace(FMath::RoundToInt(Value * 10000));
     }
 
     // Convert the array of scaled values to a space-separated string
-    FString CompressedString = FString::JoinBy(ScaledValues, TEXT("|"), [] (const int32 ScaledValue)
+    const FString CompressedString = FString::JoinBy(ScaledValues, TEXT("|"), [] (const int32 ScaledValue)
     {
         return FString::Printf(TEXT("%d"), ScaledValue);
     });
@@ -65,7 +65,7 @@ TArray<float> UNsNNFunctionLibrary::DecompressGenotype(const FString& InGenotype
     {
         // Convert each value back to an integer, then divide by 10000 to get the original float
         const int32 ScaledValue = FCString::Atoi(*StrValue);
-        DecodedFloats.Add(ScaledValue / 10000.0f);
+        DecodedFloats.Emplace(ScaledValue * 0.0001f);
     }
 
     return DecodedFloats;

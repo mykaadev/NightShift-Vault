@@ -27,14 +27,11 @@ void UNsNNIndividual::Construct(const FRandomStream InRandomStream, const int32 
     Size = InSize;
     Genotype = InGenotype;
 
-    if (const UWorld* const World = GetWorld())
+    if (const UNsNNSessionSubsystem* const NeuralSubsystem = UNsNNSessionSubsystem::GetSubsystem())
     {
-        if (const UNsNNSessionSubsystem* const NeuralSubsystem = UNsNNSessionSubsystem::GetSubsystem())
+        if (UNsNNFunctionLibrary::HasActiveFlag(NeuralSubsystem->GetSessionOverride(), ENsTrainSessionOverride::MutateGenotypeInjection))
         {
-            if (UNsNNFunctionLibrary::HasActiveFlag(NeuralSubsystem->GetSessionOverride(), ENsTrainSessionOverride::MutateGenotypeInjection))
-            {
-                Mutation(NeuralSubsystem->GetMutationChance(), InRandomStream);
-            }
+            Mutation(NeuralSubsystem->GetMutationChance(), InRandomStream);
         }
     }
 }

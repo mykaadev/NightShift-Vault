@@ -277,9 +277,9 @@ private:
     UPROPERTY()
     bool bIsTraining;
 
-    /** Is Currently Training */
+    /** Heart beat timer handle */
     UPROPERTY()
-    FTimerHandle HearthBeatTimerHandle;
+    FTimerHandle HeartBeatTimerHandle;
 
     /** Best Genotype from session */
     UPROPERTY()
@@ -293,6 +293,9 @@ private:
     UPROPERTY()
     TArray<float> SessionOverrideGenotype;
 
-    // Events
-    FDelegateHandle OnPostWorldInitialization;
+// Events
+protected:
+
+    /** On game viewport intialization */
+    FDelegateHandle OnGameViewportInitialization;
 };

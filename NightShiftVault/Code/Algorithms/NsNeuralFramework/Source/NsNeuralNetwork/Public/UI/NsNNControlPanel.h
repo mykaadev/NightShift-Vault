@@ -34,33 +34,33 @@ public:
 
     /** SpinBox to define Random Seed */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBRandomSeed;
+    TObjectPtr<class USpinBox> SBRandomSeed;
 
     /** SpinBox to define Population Size */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBPopulationSize;
+    TObjectPtr<class USpinBox> SBPopulationSize;
 
     /** SpinBox to define Individual Time */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBMaxIndividualTime;
+    TObjectPtr<class USpinBox> SBMaxIndividualTime;
 
     /** Slider to define Recombination Probability */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBRecombination;
+    TObjectPtr<class USpinBox> SBRecombination;
 
     /** Slider to define Mutation Probability */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBMutation;
+    TObjectPtr<class USpinBox> SBMutation;
 
     /** SpinBox to define Random Seed */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBInputs;
+    TObjectPtr<class USpinBox> SBInputs;
 
     /** SpinBox to define Population Size */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBHiddenLayer;
+    TObjectPtr<class USpinBox> SBHiddenLayer;
 
     /** SpinBox to define Individual Time */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
-    class USpinBox* SBOutput;
+    TObjectPtr<class USpinBox> SBOutput;
 };

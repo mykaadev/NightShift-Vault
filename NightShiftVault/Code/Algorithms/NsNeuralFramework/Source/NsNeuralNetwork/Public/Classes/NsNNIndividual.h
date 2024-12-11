@@ -41,7 +41,7 @@ public:
 
     /** Set Size */
     UFUNCTION()
-    void SetSize(int32 InSize);
+    void SetSize(const int32 InSize);
 
     /** Get Genotype */
     UFUNCTION()
@@ -61,7 +61,7 @@ public:
 
     /** Recombine */
     UFUNCTION()
-    void Recombine(const UNsNNIndividual* const InIndividual, float InProbability, FRandomStream InRandomStream);
+    void Recombine(const UNsNNIndividual* const InIndividual, const float InProbability, const FRandomStream InRandomStream);
 
     /** Mutation */
     UFUNCTION()
@@ -69,7 +69,7 @@ public:
 
 
 // Variables
-public:
+private:
 
     /** Genotype */
     UPROPERTY()

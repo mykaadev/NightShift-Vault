@@ -24,7 +24,8 @@ public class NsNeuralFramework : ModuleRules
                 "Slate",
                 "SlateCore",
                 "UMG",
-                "AIModule"
+                "AIModule",
+                "DeveloperSettings"
                 // ... add private dependencies that you statically link with here ...
             }
         );
@@ -35,15 +36,5 @@ public class NsNeuralFramework : ModuleRules
                 // ... add any modules that your module loads dynamically here ...
             }
         );
-
-        if (Target.Type == TargetType.Editor)
-        {
-            PrivateDependencyModuleNames.AddRange(
-                new string[]
-                {
-                    "DeveloperSettings"
-                }
-            );
-        }
     }
 }

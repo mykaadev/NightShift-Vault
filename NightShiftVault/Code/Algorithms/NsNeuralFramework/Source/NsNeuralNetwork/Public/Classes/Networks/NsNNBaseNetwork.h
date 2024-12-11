@@ -9,7 +9,7 @@
 /**
  * Base Neural Network, any other network should derive from this
  */
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, Abstract)
 class NSNEURALFRAMEWORK_API UNsNNBaseNetwork : public UObject
 {
     GENERATED_BODY()
@@ -18,14 +18,14 @@ class NSNEURALFRAMEWORK_API UNsNNBaseNetwork : public UObject
 public:
 
     /** Constructor */
-    UNsNNBaseNetwork() {}
+    UNsNNBaseNetwork() {};
 
     /** Initialize */
-    virtual int32 Initialize(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs) { return 0; }
+    virtual int32 Initialize(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs) PURE_VIRTUAL(Initialize, return 0;)
 
     /** Set Weights */
-    virtual void SetWeights(const TArray<float>& InGenotype) {}
+    virtual void SetWeights(const TArray<float>& InGenotype) PURE_VIRTUAL(SetWeights, return;)
 
     /** Feed Inputs and return the processed outputs */
-    virtual const TArray<float> ProcessInputs(const TArray<float>& InInputs) { return {}; }
+    virtual const TArray<float> ProcessInputs(const TArray<float>& InInputs) PURE_VIRTUAL(ProcessInputs, return {};)
 };

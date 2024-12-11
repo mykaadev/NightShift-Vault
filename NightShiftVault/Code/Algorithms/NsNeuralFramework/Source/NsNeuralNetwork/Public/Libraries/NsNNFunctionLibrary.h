@@ -34,7 +34,7 @@ public:
 
     /** Spawn AI From Class */
     UFUNCTION()
-    static class APawn* SpawnAgentFromClass(const UObject* const InWorldContextObject, const TSubclassOf<APawn> InPawnClass, const TSubclassOf<AController> InController, const FVector& Location, const FRotator& Rotation, AActor* const Owner);
+    static class APawn* SpawnAgentFromClass(const class UObject* const InWorldContextObject, class UClass* const InPawnClass, class UClass* const InController, const FVector& Location, const FRotator& Rotation, class AActor* const Owner);
 
     /** Compress Genotype for better readability and storage */
     UFUNCTION()

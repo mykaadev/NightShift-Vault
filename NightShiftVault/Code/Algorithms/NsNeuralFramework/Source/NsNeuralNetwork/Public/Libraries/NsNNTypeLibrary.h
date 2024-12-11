@@ -33,11 +33,11 @@ public:
 
     /** Pawn */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TSubclassOf<class APawn> Pawn;
+    TSoftClassPtr<class APawn> Pawn;
 
     /** Controller */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TSubclassOf<class ANsNNTrainController> Controller;
+    TSoftClassPtr<class ANsNNTrainController> Controller;
 
     /** Amount Neural Network Inputs */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -139,7 +139,7 @@ public:
 
     /** Neural Network */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TSubclassOf<class UNsNNBaseNetwork> NeuralNetwork;
+    TSoftClassPtr<class UNsNNBaseNetwork> NeuralNetwork;
 
     /** Population Setup */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)

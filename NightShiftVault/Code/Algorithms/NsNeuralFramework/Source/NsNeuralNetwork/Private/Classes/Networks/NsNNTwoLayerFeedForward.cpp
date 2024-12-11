@@ -11,8 +11,6 @@ UNsNNTwoLayerFeedForward::UNsNNTwoLayerFeedForward()
 
 int32 UNsNNTwoLayerFeedForward::Initialize(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs)
 {
-    Super::Initialize(InInputs, InHiddenLayer, InOutputs);
-
     InputLayerSize = InInputs;
     HiddenLayerSize = InHiddenLayer;
     OutputLayerSize = InOutputs;
@@ -27,8 +25,6 @@ int32 UNsNNTwoLayerFeedForward::Initialize(const int32 InInputs, const int32 InH
 
 void UNsNNTwoLayerFeedForward::SetWeights(const TArray<float>& InGenotype)
 {
-    Super::SetWeights(InGenotype);
-
     const int32 RequiredGenotypeSize = (InputLayerSize + 1) * HiddenLayerSize + (HiddenLayerSize + 1) * OutputLayerSize;
 
     if (InGenotype.Num() != RequiredGenotypeSize)

@@ -34,13 +34,13 @@ UNsNNSessionSubsystem::UNsNNSessionSubsystem()
 void UNsNNSessionSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
-    OnPostWorldInitialization = UGameViewportClient::OnViewportCreated().AddUObject(this, &UNsNNSessionSubsystem::Init);
+    OnGameViewportInitialization = UGameViewportClient::OnViewportCreated().AddUObject(this, &UNsNNSessionSubsystem::Init);
 }
 
 void UNsNNSessionSubsystem::Deinitialize()
 {
-    UGameViewportClient::OnViewportCreated().Remove(OnPostWorldInitialization);
-    OnPostWorldInitialization.Reset();
+    UGameViewportClient::OnViewportCreated().Remove(OnGameViewportInitialization);
+    OnGameViewportInitialization.Reset();
     Super::Deinitialize();
 }
 
@@ -57,9 +57,9 @@ UNsNNSessionSubsystem* UNsNNSessionSubsystem::GetSubsystem()
             {
                 if (World->IsGameWorld() || World->IsPlayInEditor())
                 {
-                    if (UNsNNSessionSubsystem* const WeatherSubsystem = UGameInstance::GetSubsystem<UNsNNSessionSubsystem>(World->GetGameInstance()))
+                    if (UNsNNSessionSubsystem* const SessionSubsystem = UGameInstance::GetSubsystem<UNsNNSessionSubsystem>(World->GetGameInstance()))
                     {
-                        ToReturn = WeatherSubsystem;
+                        ToReturn = SessionSubsystem;
                         break;
                     }
                 }
@@ -120,7 +120,7 @@ void UNsNNSessionSubsystem::SetSessionData(const FNsTrainSessionSetup& InSession
     SessionData = InSessionData;
     if (SessionData.NeuralNetwork != nullptr && SessionData.Agent.Controller != nullptr)
     {
-        SetNeuralNetwork(NewObject<UNsNNBaseNetwork>(this, SessionData.NeuralNetwork, NAME_None));
+        SetNeuralNetwork(NewObject<UNsNNBaseNetwork>(this, SessionData.NeuralNetwork.LoadSynchronous(), NAME_None));
     }
 }
 
@@ -161,7 +161,7 @@ void UNsNNSessionSubsystem::OnStartRequestReceived()
     UKismetMathLibrary::SetRandomStreamSeed(RandomStream, RandomSeed);
     UKismetMathLibrary::ResetRandomStream(RandomStream);
 
-    if (const APawn* const Agent = UNsNNFunctionLibrary::SpawnAgentFromClass(this, SessionData.Agent.Pawn, SessionData.Agent.Controller, SessionData.Gym.InitialSpawnLocation, SessionData.Gym.InitialSpawnRotation, nullptr))
+    if (const APawn* const Agent = UNsNNFunctionLibrary::SpawnAgentFromClass(this, SessionData.Agent.Pawn.LoadSynchronous(), SessionData.Agent.Controller.LoadSynchronous(), SessionData.Gym.InitialSpawnLocation, SessionData.Gym.InitialSpawnRotation, nullptr))
     {
         if (ANsNNTrainController* const TrainController = Cast<ANsNNTrainController>(Agent->GetController()))
         {
@@ -202,20 +202,23 @@ void UNsNNSessionSubsystem::InitializePopulation(const int32 InIndividualSize)
     {
         for (int32 i = 0; i < CurrentPopulation.Num(); ++i)
         {
-            CurrentPopulation[i] = NewObject<UNsNNIndividual>(this, UNsNNIndividual::StaticClass(), NAME_None);
-            if (CurrentPopulation.IsValidIndex(i) && CurrentPopulation[i] != nullptr)
+            if (CurrentPopulation.IsValidIndex(i))
             {
-                // Derive a unique seed for each individual
-                FRandomStream IndividualRandomStream;
-                IndividualRandomStream.Initialize(RandomSeed + Generation + i); // Unique seed using base seed, generation, and individual index
+                CurrentPopulation[i] = NewObject<UNsNNIndividual>(this, UNsNNIndividual::StaticClass(), NAME_None);
+                if (CurrentPopulation[i] != nullptr)
+                {
+                    // Derive a unique seed for each individual
+                    FRandomStream IndividualRandomStream;
+                    IndividualRandomStream.Initialize(RandomSeed + Generation + i); // Unique seed using base seed, generation, and individual index
 
-                if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::InjectGenotype))
-                {
-                    CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize, SessionOverrideGenotype);
-                }
-                else
-                {
-                    CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize);
+                    if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::InjectGenotype))
+                    {
+                        CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize, SessionOverrideGenotype);
+                    }
+                    else
+                    {
+                        CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize);
+                    }
                 }
             }
         }
@@ -236,7 +239,7 @@ void UNsNNSessionSubsystem::StartTrainSession()
 {
     if (const UWorld* const World = GetWorld())
     {
-        World->GetTimerManager().SetTimer(HearthBeatTimerHandle, this, &UNsNNSessionSubsystem::OnHeartBeat, 1.f, true, 1.f);
+        World->GetTimerManager().SetTimer(HeartBeatTimerHandle, this, &UNsNNSessionSubsystem::OnHeartBeat, 1.f, true, 1.f);
     }
 }
 
@@ -261,7 +264,7 @@ void UNsNNSessionSubsystem::OnHeartBeat()
                 {
                     NextGeneration();
                 }
-                else if (CurrentPopulation.IsValidIndex(CurrentIndividualIndex))
+                else if (CurrentPopulation.IsValidIndex(CurrentIndividualIndex) && CurrentPopulation[CurrentIndividualIndex] != nullptr)
                 {
                     NeuralNetwork->SetWeights(CurrentPopulation[CurrentIndividualIndex]->GetGenotype());
                     bCurrentIndividualFinished = false;
@@ -341,7 +344,7 @@ void UNsNNSessionSubsystem::NextGeneration()
 void UNsNNSessionSubsystem::NaturalSelection()
 {
     NextPopulation.Empty();
-
+    NextPopulation.Reserve(SessionData.Population.PopulationSize);
     for (int32 i = 0; i < SessionData.Population.PopulationSize; ++i)
     {
         const int32 ChosenIndexOne = UKismetMathLibrary::RandomIntegerFromStream(RandomStream, SessionData.Population.PopulationSize);
@@ -359,12 +362,12 @@ void UNsNNSessionSubsystem::NaturalSelection()
 
 void UNsNNSessionSubsystem::Recombine()
 {
-    const int32 LastIndex = FMath::TruncToInt32(static_cast<float>(NextPopulation.Num() / 2.f) - 1);
+    const int32 LastIndex = FMath::TruncToInt32(static_cast<float>(NextPopulation.Num() * 0.5f) - 1.f);
 
     for (int32 i = 0; i < LastIndex; ++i)
     {
         const int32 IndexToRecombine = i * 2;
-        if (NextPopulation.IsValidIndex(IndexToRecombine))
+        if (NextPopulation.IsValidIndex(IndexToRecombine) && NextPopulation[IndexToRecombine] != nullptr)
         {
             NextPopulation[IndexToRecombine]->Recombine(NextPopulation[IndexToRecombine + 1], SessionData.Population.RecombinationChance, RandomStream);
         }
@@ -386,7 +389,7 @@ void UNsNNSessionSubsystem::StopTrainSession()
 {
     if (const UWorld* const World = GetWorld())
     {
-        if (World->GetTimerManager().TimerExists(HearthBeatTimerHandle))
+        if (World->GetTimerManager().TimerExists(HeartBeatTimerHandle))
         {
             if (CurrentController != nullptr)
             {
@@ -397,7 +400,7 @@ void UNsNNSessionSubsystem::StopTrainSession()
                 if (AActor* const Entity = Cast<AActor>(CurrentController->GetOwner()))
                 {
                     Entity->Destroy();
-                    World->GetTimerManager().ClearTimer(HearthBeatTimerHandle);
+                    World->GetTimerManager().ClearTimer(HeartBeatTimerHandle);
                 }
             }
         }
@@ -442,9 +445,9 @@ void UNsNNSessionSubsystem::SaveSessionData(const TArray<float>& InGenotype, con
             }
             else if (BasePath.IsEmpty())
             {
-                if (IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get())
+                if (IDesktopPlatform* const DesktopPlatform = FDesktopPlatformModule::Get())
                 {
-                    const void* ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+                    const void* const ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
                     FString SelectedPath;
                     if (DesktopPlatform->OpenDirectoryDialog(ParentWindowHandle, TEXT("Select Save Location"), FPaths::ProjectDir(), SelectedPath))
                     {
