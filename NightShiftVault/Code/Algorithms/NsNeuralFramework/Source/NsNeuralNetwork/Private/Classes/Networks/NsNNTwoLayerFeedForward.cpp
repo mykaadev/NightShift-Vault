@@ -1,4 +1,4 @@
-﻿// Copyright © 2024 mykaa. All rights reserved.
+﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
 #include "Classes/Networks/NsNNTwoLayerFeedForward.h"
 #include "Kismet/KismetMathLibrary.h"

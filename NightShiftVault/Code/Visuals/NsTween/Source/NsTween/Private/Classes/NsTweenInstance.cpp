@@ -1,4 +1,4 @@
-﻿// Copyright © 2024 mykaa. All rights reserved.
+﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
 #include "Classes/NsTweenInstance.h"
 #include "Classes/NsTweenUObject.h"
@@ -193,7 +193,7 @@ void NsTweenInstance::Unpause()
 
 void NsTweenInstance::Update(float UnscaledDeltaSeconds, float DilatedDeltaSeconds, bool bIsGamePaused)
 {
-    if (bIsPaused || !bIsActive || bIsGamePaused && !bCanTickDuringPause)
+    if ((bIsPaused || !bIsActive || bIsGamePaused) && !bCanTickDuringPause)
     {
         return;
     }
