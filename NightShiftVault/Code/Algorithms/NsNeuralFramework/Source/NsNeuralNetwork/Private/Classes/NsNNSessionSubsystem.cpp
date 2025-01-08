@@ -186,23 +186,20 @@ void UNsNNSessionSubsystem::InitializePopulation(const int32 InIndividualSize)
     CurrentPopulation.SetNum(SessionData.Population.PopulationSize);
     for (int32 i = 0; i < CurrentPopulation.Num(); ++i)
     {
-        if (CurrentPopulation.IsValidIndex(i))
+        CurrentPopulation[i] = NewObject<UNsNNIndividual>(this, UNsNNIndividual::StaticClass(), NAME_None);
+        if (CurrentPopulation[i] != nullptr)
         {
-            CurrentPopulation[i] = NewObject<UNsNNIndividual>(this, UNsNNIndividual::StaticClass(), NAME_None);
-            if (CurrentPopulation[i] != nullptr)
-            {
-                // Derive a unique seed for each individual
-                FRandomStream IndividualRandomStream;
-                IndividualRandomStream.Initialize(RandomSeed + Generation + i); // Unique seed using base seed, generation, and individual index
+            // Derive a unique seed for each individual
+            FRandomStream IndividualRandomStream;
+            IndividualRandomStream.Initialize(RandomSeed + Generation + i); // Unique seed using base seed, generation, and individual index
 
-                if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::InjectGenotype))
-                {
-                    CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize, SessionOverrideGenotype);
-                }
-                else
-                {
-                    CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize);
-                }
+            if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::InjectGenotype))
+            {
+                CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize, SessionOverrideGenotype);
+            }
+            else
+            {
+                CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize);
             }
         }
     }
@@ -460,13 +457,13 @@ void UNsNNSessionSubsystem::SaveSessionData(const TArray<float>& InGenotype, con
 
         // Save Agent Data
         FileContents += TEXT("\n[AGENT DATA]\n");
-        if (SessionData.Agent.Controller != nullptr)
+        if (SessionData.Agent.Controller.IsValid())
         {
             const FSoftClassPath ControllerPath(SessionData.Agent.Controller.Get());
             FileContents += FString::Printf(TEXT("Controller=%s\n"), *ControllerPath.ToString());
         }
 
-        if (SessionData.NeuralNetwork != nullptr)
+        if (SessionData.NeuralNetwork.IsValid())
         {
             const FSoftClassPath NeuralNetworkPath(SessionData.NeuralNetwork.Get());
             FileContents += FString::Printf(TEXT("NeuralNetwork=%s\n"), *NeuralNetworkPath.ToString());
@@ -509,11 +506,11 @@ bool UNsNNSessionSubsystem::LoadSessionDataFromFile()
     if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
     {
         const FString BasePath = Settings->DataExportPath;
-        if (IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get())
+        if (IDesktopPlatform* const DesktopPlatform = FDesktopPlatformModule::Get())
         {
-            const void* ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+            const void* const ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
             TArray<FString> OutFiles;
-            if (DesktopPlatform->OpenFileDialog( ParentWindowHandle, TEXT("Select Session Data File"), !FPaths::DirectoryExists(BasePath) || BasePath.IsEmpty() ? FPaths::ProjectDir() : BasePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
+            if (DesktopPlatform->OpenFileDialog(ParentWindowHandle, TEXT("Select Session Data File"), !FPaths::DirectoryExists(BasePath) || BasePath.IsEmpty() ? FPaths::ProjectDir() : BasePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
             {
                 FilePath = OutFiles[0];
             }
@@ -568,19 +565,18 @@ bool UNsNNSessionSubsystem::LoadSessionDataFromFile()
         }
     };
 
-    auto TrySetController = [&](const FString& InKey, TObjectPtr<ANsNNTrainController>& OutController)
+    auto TrySetController = [&](const FString& InKey, TObjectPtr<ANsNNTrainController>& InOutController)
     {
         if (ParsedData.Contains(InKey))
         {
             const FSoftObjectPath ControllerPath(ParsedData[InKey]);
             const TSoftClassPtr<ANsNNTrainController> Controller(ControllerPath);
-            if (Controller.IsValid() && OutController != nullptr)
+            if (Controller.IsValid() && InOutController != nullptr)
             {
-                APawn* const PlayerPawn = OutController->GetPawn();
-                OutController->Destroy(); // Destroy the old controller since we will create a new one
+                APawn* const PlayerPawn = InOutController->GetPawn();
+                InOutController->Destroy(); // Destroy the old controller since we will create a new one
                 UClass* const TrainControllerClass = Controller.LoadSynchronous();
-                AController* const SpawnedController = UNsNNFunctionLibrary::SpawnControllerInAgent(TrainControllerClass, PlayerPawn, GetWorld());
-                OutController = Cast<ANsNNTrainController>(SpawnedController);
+                InOutController = Cast<ANsNNTrainController>(UNsNNFunctionLibrary::SpawnControllerInAgent(TrainControllerClass, PlayerPawn, GetWorld()));
             }
         }
     };
@@ -591,7 +587,7 @@ bool UNsNNSessionSubsystem::LoadSessionDataFromFile()
         {
             const FSoftObjectPath NeuralNetworkPath(ParsedData[InKey]);
             const TSoftClassPtr<ANsNNTrainController> NeuralNetwork(NeuralNetworkPath);
-            if (NeuralNetwork.IsValid() && OutNeuralNetwork != nullptr)
+            if (NeuralNetwork.IsValid())
             {
                 OutNeuralNetwork = Cast<UNsNNBaseNetwork>(NeuralNetwork.LoadSynchronous());
             }
@@ -629,6 +625,7 @@ bool UNsNNSessionSubsystem::LoadSessionDataFromFile()
                 CurrentPopulation[i]->SetGenotype(UNsNNFunctionLibrary::DecompressGenotype(ParsedData[Key]));
             }
         }
+
         CurrentIndividualIndex = 0; // Fully reset the generation
         TrySetInt(TEXT("MaxTimePerIndividual"), SessionData.Population.MaxTimePerIndividual);
     }
