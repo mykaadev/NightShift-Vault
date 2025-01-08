@@ -2,7 +2,7 @@
 
 #include "Libraries/NsNNFunctionLibrary.h"
 
-APawn* UNsNNFunctionLibrary::SpawnAgentFromClass(const UObject* const InWorldContextObject, UClass* const InPawnClass, UClass* const InController, const FVector& Location, const FRotator& Rotation, AActor* const Owner)
+APawn* UNsNNFunctionLibrary::SpawnAgent(const UObject* const InWorldContextObject, UClass* const InPawnClass, UClass* const InController, const FVector& InLocation, const FRotator& InRotation, AActor* const InOwner)
 {
     APawn* Agent = nullptr;
     if (GEngine != nullptr)
@@ -11,28 +11,36 @@ APawn* UNsNNFunctionLibrary::SpawnAgentFromClass(const UObject* const InWorldCon
         if (World != nullptr && InPawnClass != nullptr)
         {
             FActorSpawnParameters ActorSpawnParams;
-            ActorSpawnParams.Owner = Owner;
+            ActorSpawnParams.Owner = InOwner;
             ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-            Agent = World->SpawnActor<APawn>(InPawnClass, Location, Rotation, ActorSpawnParams);
-
-            if (Agent != nullptr && Agent->Controller == nullptr && InController != nullptr)
-            {
-                FActorSpawnParameters SpawnInfo;
-                SpawnInfo.Instigator = Agent->GetInstigator();
-                SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-                SpawnInfo.OverrideLevel = Agent->GetLevel();
-                SpawnInfo.ObjectFlags |= RF_Transient; // We never want to save AI controllers into a map
-
-                if (AController* const NewController = World->SpawnActor<AController>(InController, Agent->GetActorLocation(), Agent->GetActorRotation(), SpawnInfo))
-                {
-                    // If successful will result in setting Agent->Controller as part of possession mechanics
-                    NewController->Possess(Agent);
-                }
-            }
+            Agent = World->SpawnActor<APawn>(InPawnClass, InLocation, InRotation, ActorSpawnParams);
+            SpawnControllerInAgent(InController, Agent, World);
         }
     }
 
     return Agent;
+}
+
+AController* UNsNNFunctionLibrary::SpawnControllerInAgent(UClass* const InController, APawn* const InAgent, UWorld* const InWorld)
+{
+    AController* Controller = nullptr;
+    if (InWorld != nullptr && InAgent != nullptr && InController != nullptr)
+    {
+        FActorSpawnParameters SpawnInfo;
+        SpawnInfo.Instigator = InAgent->GetInstigator();
+        SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        SpawnInfo.OverrideLevel = InAgent->GetLevel();
+        SpawnInfo.ObjectFlags |= RF_Transient; // We never want to save AI controllers into a map
+
+        Controller = InWorld->SpawnActor<AController>(InController, InAgent->GetActorLocation(), InAgent->GetActorRotation(), SpawnInfo);
+        if (Controller != nullptr)
+        {
+            // If successful will result in setting InAgent->Controller as part of possession mechanics
+            Controller->Possess(InAgent);
+        }
+    }
+
+    return Controller;
 }
 
 FString UNsNNFunctionLibrary::CompressGenotype(const TArray<float>& InGenotype)

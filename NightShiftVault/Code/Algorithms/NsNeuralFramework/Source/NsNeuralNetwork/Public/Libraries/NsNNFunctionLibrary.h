@@ -32,9 +32,13 @@ public:
         InFlags |= static_cast<uint8>(InNewState);
     }
 
-    /** Spawn AI From Class */
+    /** Spawn AI from class */
     UFUNCTION()
-    static class APawn* SpawnAgentFromClass(const class UObject* const InWorldContextObject, class UClass* const InPawnClass, class UClass* const InController, const FVector& Location, const FRotator& Rotation, class AActor* const Owner);
+    static class APawn* SpawnAgent(const class UObject* const InWorldContextObject, class UClass* const InPawnClass, class UClass* const InController, const FVector& InLocation, const FRotator& InRotation, class AActor* const InOwner);
+
+    /** Spawn controller in agent */
+    UFUNCTION()
+    static class AController* SpawnControllerInAgent(class UClass* const InController, class APawn* const InAgent, class UWorld* const InWorld);
 
     /** Compress Genotype for better readability and storage */
     UFUNCTION()

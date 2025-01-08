@@ -134,6 +134,10 @@ public:
     UFUNCTION(BlueprintCallable)
     void SaveSessionData(const TArray<float>& InGenotype, const FString& InFileNameSuffix);
 
+    /** Load session data */
+    UFUNCTION(BlueprintCallable)
+    bool LoadSessionDataFromFile();
+
     /** Get Mutation chance */
     UFUNCTION(BlueprintCallable)
     float GetMutationChance() const;

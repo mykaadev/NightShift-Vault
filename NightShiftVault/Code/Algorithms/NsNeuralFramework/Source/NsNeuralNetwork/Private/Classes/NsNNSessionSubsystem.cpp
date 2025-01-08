@@ -161,17 +161,18 @@ void UNsNNSessionSubsystem::OnStartRequestReceived()
     UKismetMathLibrary::SetRandomStreamSeed(RandomStream, RandomSeed);
     UKismetMathLibrary::ResetRandomStream(RandomStream);
 
-    if (const APawn* const Agent = UNsNNFunctionLibrary::SpawnAgentFromClass(this, SessionData.Agent.Pawn.LoadSynchronous(), SessionData.Agent.Controller.LoadSynchronous(), SessionData.Gym.InitialSpawnLocation, SessionData.Gym.InitialSpawnRotation, nullptr))
+    if (const APawn* const Agent = UNsNNFunctionLibrary::SpawnAgent(this, SessionData.Agent.Pawn.LoadSynchronous(), SessionData.Agent.Controller.LoadSynchronous(), SessionData.Gym.InitialSpawnLocation, SessionData.Gym.InitialSpawnRotation, nullptr))
     {
         if (ANsNNTrainController* const TrainController = Cast<ANsNNTrainController>(Agent->GetController()))
         {
-            SetAgentController(TrainController);
+            CurrentController = TrainController;
+
             if (NeuralNetwork != nullptr && CurrentController != nullptr)
             {
-                const int32 IndividualSize = NeuralNetwork->Initialize(SessionData.Agent.NeuralInputs
-                                                                     , SessionData.Agent.NeuralHiddenLayerSize
-                                                                     , SessionData.Agent.NeuralOutputs);
-                InitializePopulation(IndividualSize);
+                const int32 AgentGenotypeSize = NeuralNetwork->Initialize(SessionData.Agent.NeuralInputs
+                                                                        , SessionData.Agent.NeuralHiddenLayerSize
+                                                                        , SessionData.Agent.NeuralOutputs);
+                InitializePopulation(AgentGenotypeSize);
                 SetDefaultSessionValues();
                 StartTrainSession();
             }
@@ -183,42 +184,24 @@ void UNsNNSessionSubsystem::InitializePopulation(const int32 InIndividualSize)
 {
     CurrentPopulation.Empty();
     CurrentPopulation.SetNum(SessionData.Population.PopulationSize);
-
-    if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::InjectPopulation))
+    for (int32 i = 0; i < CurrentPopulation.Num(); ++i)
     {
-        // #NsNeuralFramework #NsToDo : Import Session file
-        // ensure population size meets the session parameters
-        // if not, change the session parameters to match the population data
-        if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::MutatePopulationInjection))
+        if (CurrentPopulation.IsValidIndex(i))
         {
-            // Construct each individual with a predefined genotype and mutate it
-        }
-        else
-        {
-            // Construct each individual with a predefined genotype
-        }
-    }
-    else
-    {
-        for (int32 i = 0; i < CurrentPopulation.Num(); ++i)
-        {
-            if (CurrentPopulation.IsValidIndex(i))
+            CurrentPopulation[i] = NewObject<UNsNNIndividual>(this, UNsNNIndividual::StaticClass(), NAME_None);
+            if (CurrentPopulation[i] != nullptr)
             {
-                CurrentPopulation[i] = NewObject<UNsNNIndividual>(this, UNsNNIndividual::StaticClass(), NAME_None);
-                if (CurrentPopulation[i] != nullptr)
-                {
-                    // Derive a unique seed for each individual
-                    FRandomStream IndividualRandomStream;
-                    IndividualRandomStream.Initialize(RandomSeed + Generation + i); // Unique seed using base seed, generation, and individual index
+                // Derive a unique seed for each individual
+                FRandomStream IndividualRandomStream;
+                IndividualRandomStream.Initialize(RandomSeed + Generation + i); // Unique seed using base seed, generation, and individual index
 
-                    if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::InjectGenotype))
-                    {
-                        CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize, SessionOverrideGenotype);
-                    }
-                    else
-                    {
-                        CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize);
-                    }
+                if (UNsNNFunctionLibrary::HasActiveFlag(SessionOverrideFlags, ENsTrainSessionOverride::InjectGenotype))
+                {
+                    CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize, SessionOverrideGenotype);
+                }
+                else
+                {
+                    CurrentPopulation[i]->Construct(IndividualRandomStream, InIndividualSize);
                 }
             }
         }
@@ -466,32 +449,36 @@ void UNsNNSessionSubsystem::SaveSessionData(const TArray<float>& InGenotype, con
         const FString& FilePath = FPaths::Combine(BasePath, FString::Printf(TEXT("%s.txt"), *InFileNameSuffix));
         FString FileContents;
 
-        // SESSION DATA
+        // Save Session Data
         FileContents += TEXT("[SESSION DATA]\n");
         FileContents += FString::Printf(TEXT("RandomSeed=%d\n"), RandomSeed);
-        FileContents += FString::Printf(TEXT("PopulationSize=%d\n"), SessionData.Population.PopulationSize);
-        FileContents += FString::Printf(TEXT("MaxTimePerIndividual=%d\n"), SessionData.Population.MaxTimePerIndividual);
         FileContents += FString::Printf(TEXT("MutationChance=%f\n"), SessionData.Population.MutationChance);
         FileContents += FString::Printf(TEXT("RecombinationChance=%f\n"), SessionData.Population.RecombinationChance);
         FileContents += FString::Printf(TEXT("NeuralInputs=%d\n"), SessionData.Agent.NeuralInputs);
         FileContents += FString::Printf(TEXT("NeuralHiddenLayerSize=%d\n"), SessionData.Agent.NeuralHiddenLayerSize);
         FileContents += FString::Printf(TEXT("NeuralOutputs=%d\n"), SessionData.Agent.NeuralOutputs);
 
-        if (CurrentController != nullptr)
+        // Save Agent Data
+        FileContents += TEXT("\n[AGENT DATA]\n");
+        if (SessionData.Agent.Controller != nullptr)
         {
-            FileContents += FString::Printf(TEXT("Controller=%s\n"), *CurrentController->GetName());
+            const FSoftClassPath ControllerPath(SessionData.Agent.Controller.Get());
+            FileContents += FString::Printf(TEXT("Controller=%s\n"), *ControllerPath.ToString());
         }
 
-        // AGENT DATA
-        FileContents += TEXT("\n[AGENT DATA]\n");
+        if (SessionData.NeuralNetwork != nullptr)
+        {
+            const FSoftClassPath NeuralNetworkPath(SessionData.NeuralNetwork.Get());
+            FileContents += FString::Printf(TEXT("NeuralNetwork=%s\n"), *NeuralNetworkPath.ToString());
+        }
         FileContents += TEXT("Genotype=");
         FileContents += UNsNNFunctionLibrary::CompressGenotype(InGenotype);
         FileContents += TEXT("\n");
 
-        // POPULATION DATA
+        // Save Population Data
         FileContents += TEXT("\n[POPULATION DATA]\n");
         FileContents += FString::Printf(TEXT("PopulationSize=%d\n"), SessionData.Population.PopulationSize);
-        FileContents += TEXT("Genotypes=\n");
+        FileContents += FString::Printf(TEXT("MaxTimePerIndividual=%d\n"), SessionData.Population.MaxTimePerIndividual);
         for (int32 i = 0; i < CurrentPopulation.Num(); ++i)
         {
             if (CurrentPopulation[i] != nullptr)
@@ -512,6 +499,142 @@ void UNsNNSessionSubsystem::SaveSessionData(const TArray<float>& InGenotype, con
             UE_LOG(LogTemp, Error, TEXT("Failed to save file to %s"), *FilePath);
         }
     }
+}
+
+bool UNsNNSessionSubsystem::LoadSessionDataFromFile()
+{
+    FString FilePath;
+
+    // Open a file dialog to select the file
+    if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
+    {
+        const FString BasePath = Settings->DataExportPath;
+        if (IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get())
+        {
+            const void* ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+            TArray<FString> OutFiles;
+            if (DesktopPlatform->OpenFileDialog( ParentWindowHandle, TEXT("Select Session Data File"), !FPaths::DirectoryExists(BasePath) || BasePath.IsEmpty() ? FPaths::ProjectDir() : BasePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
+            {
+                FilePath = OutFiles[0];
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("User canceled file selection."));
+                return false; // User canceled
+            }
+        }
+    }
+
+    if (FilePath.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("No file selected."));
+        return false; // No file selected
+    }
+
+    FString FileContents;
+    if (!FFileHelper::LoadFileToString(FileContents, *FilePath))
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to load file from %s"), *FilePath);
+        return false;
+    }
+
+    TMap<FString, FString> ParsedData;
+    TArray<FString> Lines;
+    FileContents.ParseIntoArrayLines(Lines);
+
+    // Parse lines into a key-value map
+    for (const FString& Line : Lines)
+    {
+        FString Key, Value;
+        if (Line.Split(TEXT("="), &Key, &Value))
+        {
+          ParsedData.Add(Key, Value);
+        }
+    }
+
+    auto TrySetInt = [&](const FString& InKey, int32& OutVar)
+    {
+        if (ParsedData.Contains(InKey))
+        {
+            OutVar = FCString::Atoi(*ParsedData[InKey]);
+        }
+    };
+
+    auto TrySetFloat = [&](const FString& InKey, float& OutVar)
+    {
+        if (ParsedData.Contains(InKey))
+        {
+            OutVar = FCString::Atof(*ParsedData[InKey]);
+        }
+    };
+
+    auto TrySetController = [&](const FString& InKey, TObjectPtr<ANsNNTrainController>& OutController)
+    {
+        if (ParsedData.Contains(InKey))
+        {
+            const FSoftObjectPath ControllerPath(ParsedData[InKey]);
+            const TSoftClassPtr<ANsNNTrainController> Controller(ControllerPath);
+            if (Controller.IsValid() && OutController != nullptr)
+            {
+                APawn* const PlayerPawn = OutController->GetPawn();
+                OutController->Destroy(); // Destroy the old controller since we will create a new one
+                UClass* const TrainControllerClass = Controller.LoadSynchronous();
+                AController* const SpawnedController = UNsNNFunctionLibrary::SpawnControllerInAgent(TrainControllerClass, PlayerPawn, GetWorld());
+                OutController = Cast<ANsNNTrainController>(SpawnedController);
+            }
+        }
+    };
+
+    auto TrySetNeuralNetwork = [&](const FString& InKey, TObjectPtr<UNsNNBaseNetwork>& OutNeuralNetwork)
+    {
+        if (ParsedData.Contains(InKey))
+        {
+            const FSoftObjectPath NeuralNetworkPath(ParsedData[InKey]);
+            const TSoftClassPtr<ANsNNTrainController> NeuralNetwork(NeuralNetworkPath);
+            if (NeuralNetwork.IsValid() && OutNeuralNetwork != nullptr)
+            {
+                OutNeuralNetwork = Cast<UNsNNBaseNetwork>(NeuralNetwork.LoadSynchronous());
+            }
+        }
+    };
+
+    // Assign Session variables
+    TrySetInt(TEXT("RandomSeed"), RandomSeed);
+    TrySetFloat(TEXT("MutationChance"), SessionData.Population.MutationChance);
+    TrySetFloat(TEXT("RecombinationChance"), SessionData.Population.RecombinationChance);
+    TrySetInt(TEXT("NeuralInputs"), SessionData.Agent.NeuralInputs);
+    TrySetInt(TEXT("NeuralHiddenLayerSize"), SessionData.Agent.NeuralHiddenLayerSize);
+    TrySetInt(TEXT("NeuralOutputs"), SessionData.Agent.NeuralOutputs);
+
+    // Assign Agent variables
+    TrySetController(TEXT("Controller"), CurrentController);
+    TrySetNeuralNetwork(TEXT("NeuralNetwork"), NeuralNetwork);
+
+    if (NeuralNetwork != nullptr)
+    {
+         const int32 AgentGenotypeSize = NeuralNetwork->Initialize(SessionData.Agent.NeuralInputs
+                                       , SessionData.Agent.NeuralHiddenLayerSize
+                                       , SessionData.Agent.NeuralOutputs);
+
+        // Assign Population variables
+        TrySetInt(TEXT("PopulationSize"), SessionData.Population.PopulationSize);
+        CurrentPopulation.Reset(SessionData.Population.PopulationSize);
+        InitializePopulation(AgentGenotypeSize);
+
+        for (int32 i = 0; i < SessionData.Population.PopulationSize; ++i)
+        {
+            const FString Key = FString::Printf(TEXT("Agent_%d"), i);
+            if (ParsedData.Contains(Key) && CurrentPopulation.IsValidIndex(i) && CurrentPopulation[i] != nullptr)
+            {
+                CurrentPopulation[i]->SetGenotype(UNsNNFunctionLibrary::DecompressGenotype(ParsedData[Key]));
+            }
+        }
+        CurrentIndividualIndex = 0; // Fully reset the generation
+        TrySetInt(TEXT("MaxTimePerIndividual"), SessionData.Population.MaxTimePerIndividual);
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Loaded session data from %s"), *FilePath);
+    return true;
 }
 
 float UNsNNSessionSubsystem::GetMutationChance() const
