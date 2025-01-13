@@ -1,19 +1,17 @@
 ﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
-#include "Classes/NsNNIndividual.h"
-#include "Classes/NsNNSessionSubsystem.h"
+#include "NsNNIndividual.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Libraries/NsNNFunctionLibrary.h"
+#include "NsNNSessionSubsystem.h"
 
 UNsNNIndividual::UNsNNIndividual()
-    : Size(0)
-    , Fitness(0)
+    : Fitness(0)
 {}
 
 void UNsNNIndividual::Construct(const FRandomStream InRandomStream, const int32 InSize)
 {
-    Size = InSize;
-    Genotype.SetNum(Size);
+    Genotype.SetNum(InSize);
 
     for (float& Gene : Genotype)
     {
@@ -23,8 +21,7 @@ void UNsNNIndividual::Construct(const FRandomStream InRandomStream, const int32 
 
 void UNsNNIndividual::Construct(const FRandomStream InRandomStream, const int32 InSize, const TArray<float>& InGenotype)
 {
-    ensureMsgf(Size == InGenotype.Num(), TEXT("UNsNNIndividual::Construct : Genotype Size does not meet the InSize"));
-    Size = InSize;
+    ensureMsgf(InSize == InGenotype.Num(), TEXT("UNsNNIndividual::Construct : Genotype Size does not meet the InSize"));
     Genotype = InGenotype;
 
     if (const UNsNNSessionSubsystem* const NeuralSubsystem = UNsNNSessionSubsystem::GetSubsystem())
@@ -48,12 +45,12 @@ void UNsNNIndividual::SetFitness(const float InFitness)
 
 int32 UNsNNIndividual::GetSize() const
 {
-    return Size;
+    return Genotype.Num();
 }
 
 void UNsNNIndividual::SetSize(const int32 InSize)
 {
-    Size = InSize;
+    Genotype.SetNum(InSize);
 }
 
 TArray<float> UNsNNIndividual::GetGenotype() const
@@ -88,8 +85,8 @@ void UNsNNIndividual::Recombine(const UNsNNIndividual* const InIndividual, const
 
         if (Recombination < InProbability)
         {
-            const int32 PointOfCutOne = UKismetMathLibrary::RandomIntegerInRangeFromStream(InRandomStream, 1, Size - 2);
-            const int32 PointOfCutTwo = UKismetMathLibrary::RandomIntegerInRangeFromStream(InRandomStream, PointOfCutOne + 1, Size - 1);
+            const int32 PointOfCutOne = UKismetMathLibrary::RandomIntegerInRangeFromStream(InRandomStream, 1, Genotype.Num() - 2);
+            const int32 PointOfCutTwo = UKismetMathLibrary::RandomIntegerInRangeFromStream(InRandomStream, PointOfCutOne + 1, Genotype.Num() - 1);
 
             for (int32 i = PointOfCutOne; i < PointOfCutTwo; ++i)
             {

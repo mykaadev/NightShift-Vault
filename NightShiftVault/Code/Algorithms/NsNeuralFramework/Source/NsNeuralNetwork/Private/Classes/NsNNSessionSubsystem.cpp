@@ -1,15 +1,15 @@
 ﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
-#include "Classes/NsNNSessionSubsystem.h"
+#include "NsNNSessionSubsystem.h"
 #include "Blueprint/UserWidget.h"
-#include "Classes/Networks/NsNNTwoLayerFeedForward.h"
-#include "Classes/NsNNIndividual.h"
-#include "Classes/NsNNSettings.h"
-#include "Classes/NsNNTrainController.h"
 #include "DesktopPlatformModule.h"
 #include "IDesktopPlatform.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Libraries/NsNNFunctionLibrary.h"
+#include "Networks/NsNNTwoLayerFeedForward.h"
+#include "NsNNIndividual.h"
+#include "NsNNSettings.h"
+#include "NsNNTrainController.h"
 #include "UI/NsNNControlPanel.h"
 
 UNsNNSessionSubsystem::UNsNNSessionSubsystem()
@@ -29,19 +29,6 @@ UNsNNSessionSubsystem::UNsNNSessionSubsystem()
     , bIsTraining(false)
     , SessionOverrideFlags(0)
 {
-}
-
-void UNsNNSessionSubsystem::Initialize(FSubsystemCollectionBase& Collection)
-{
-    Super::Initialize(Collection);
-    OnGameViewportInitialization = UGameViewportClient::OnViewportCreated().AddUObject(this, &UNsNNSessionSubsystem::Init);
-}
-
-void UNsNNSessionSubsystem::Deinitialize()
-{
-    UGameViewportClient::OnViewportCreated().Remove(OnGameViewportInitialization);
-    OnGameViewportInitialization.Reset();
-    Super::Deinitialize();
 }
 
 UNsNNSessionSubsystem* UNsNNSessionSubsystem::GetSubsystem()
@@ -70,25 +57,31 @@ UNsNNSessionSubsystem* UNsNNSessionSubsystem::GetSubsystem()
     return ToReturn;
 }
 
-void UNsNNSessionSubsystem::Init() const
+UNsNNControlPanel* UNsNNSessionSubsystem::GetControlPanel() const
 {
-  if (UWorld* const World = GetWorld())
-  {
-      if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
-      {
-          if (UClass* const ControlPanelClass = Settings->ControlPanel.LoadSynchronous())
-          {
-              if (UNsNNControlPanel* const ControlPanel = CreateWidget<UNsNNControlPanel>(World, ControlPanelClass))
-              {
-                  ControlPanel->AddToViewport();
-                  if (APlayerController* const PlayerController = World->GetFirstPlayerController())
-                  {
-                      PlayerController->bShowMouseCursor = true;
-                  }
-              }
-          }
-      }
-  }
+    return ControlPanel;
+}
+
+void UNsNNSessionSubsystem::Init()
+{
+    if (UWorld* const World = GetWorld())
+    {
+        if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
+        {
+            if (UClass* const ControlPanelClass = Settings->ControlPanel.LoadSynchronous())
+            {
+                ControlPanel = CreateWidget<UNsNNControlPanel>(World, ControlPanelClass);
+                if (ControlPanel != nullptr)
+                {
+                    ControlPanel->AddToViewport();
+                    if (APlayerController* const PlayerController = World->GetFirstPlayerController())
+                    {
+                        PlayerController->bShowMouseCursor = true;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void UNsNNSessionSubsystem::SetRandomSeed(const int32 InRandomSeed)
@@ -545,7 +538,7 @@ bool UNsNNSessionSubsystem::LoadSessionDataFromFile()
         FString Key, Value;
         if (Line.Split(TEXT("="), &Key, &Value))
         {
-          ParsedData.Add(Key, Value);
+            ParsedData.Emplace(Key, Value);
         }
     }
 
@@ -589,7 +582,11 @@ bool UNsNNSessionSubsystem::LoadSessionDataFromFile()
             const TSoftClassPtr<ANsNNTrainController> NeuralNetwork(NeuralNetworkPath);
             if (NeuralNetwork.IsValid())
             {
-                OutNeuralNetwork = Cast<UNsNNBaseNetwork>(NeuralNetwork.LoadSynchronous());
+                const UClass* const LoadedClass = NeuralNetwork.LoadSynchronous();
+                if (LoadedClass != nullptr && LoadedClass->IsChildOf(UNsNNBaseNetwork::StaticClass()))
+                {
+                    OutNeuralNetwork = Cast<UNsNNBaseNetwork>(LoadedClass->GetDefaultObject());
+                }
             }
         }
     };

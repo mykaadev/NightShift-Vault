@@ -1,6 +1,6 @@
 ﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
-#include "Classes/Networks/NsNNTwoLayerFeedForward.h"
+#include "Networks/NsNNTwoLayerFeedForward.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UNsNNTwoLayerFeedForward::UNsNNTwoLayerFeedForward()
@@ -17,8 +17,9 @@ int32 UNsNNTwoLayerFeedForward::Initialize(const int32 InInputs, const int32 InH
 
     WeightGroupOne.SetNum((InputLayerSize + 1) * HiddenLayerSize);
     WeightGroupTwo.SetNum((HiddenLayerSize + 1) * OutputLayerSize);
+
     HiddenLayerOutputs.SetNum(HiddenLayerSize);
-    OutputLayerOutput.SetNum(OutputLayerSize);
+    OutputLayerOutputs.SetNum(OutputLayerSize);
 
     return WeightGroupOne.Num() + WeightGroupTwo.Num();
 }
@@ -97,8 +98,8 @@ TArray<float> UNsNNTwoLayerFeedForward::ForwardPropagation(const TArray<float>& 
         }
         const int32 BiasIndex = i * (HiddenLayerSize + 1) + HiddenLayerSize;
         Sum -= WeightGroupTwo[BiasIndex];
-        OutputLayerOutput[i] = 1.f / (1.f + UKismetMathLibrary::Exp(-Sum)); // Sigmoid activation
+        OutputLayerOutputs[i] = 1.f / (1.f + UKismetMathLibrary::Exp(-Sum)); // Sigmoid activation
     }
 
-    return OutputLayerOutput;
+    return OutputLayerOutputs;
 }

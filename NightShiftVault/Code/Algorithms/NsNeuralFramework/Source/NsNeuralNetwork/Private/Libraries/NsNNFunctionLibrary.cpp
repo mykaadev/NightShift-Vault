@@ -1,6 +1,107 @@
 ﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
 #include "Libraries/NsNNFunctionLibrary.h"
+#include "DesktopPlatformModule.h"
+#include "HAL/PlatformApplicationMisc.h"
+#include "IDesktopPlatform.h"
+#include "NsNNSessionSubsystem.h"
+#include "NsNNSettings.h"
+
+FAutoConsoleCommand ExecNsNeuralFrameworkStartTrainSessionCmd
+(
+    TEXT("NsNeuralFramework.StartTrainSession"),
+    TEXT("Start a train session"),
+    FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args)
+    {
+        if (UNsNNSessionSubsystem* const NeuralSubsystem = UNsNNSessionSubsystem::GetSubsystem())
+        {
+            if (NeuralSubsystem->GetControlPanel() == nullptr)
+            {
+                NeuralSubsystem->Init();
+            }
+        }
+    })
+);
+
+FAutoConsoleCommand ExecNsNeuralFrameworkImportGenotypeFromFileCmd
+(
+    TEXT("NsNeuralFramework.ImportGenotype"),
+    TEXT("Imports a genotype from a file to the user clipboard"),
+    FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args)
+    {
+        FString FilePath;
+
+        // Open a file dialog to select the file
+        if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
+        {
+            const FString BasePath = Settings->DataExportPath;
+            if (IDesktopPlatform* const DesktopPlatform = FDesktopPlatformModule::Get())
+            {
+                const void* const ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+                TArray<FString> OutFiles;
+                if (DesktopPlatform->OpenFileDialog(ParentWindowHandle, TEXT("Import Genotype from session file"), !FPaths::DirectoryExists(BasePath) || BasePath.IsEmpty() ? FPaths::ProjectDir() : BasePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
+                {
+                    FilePath = OutFiles[0];
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("User canceled file selection."));
+                    return; // User canceled
+                }
+            }
+        }
+
+        if (FilePath.IsEmpty())
+        {
+            UE_LOG(LogTemp, Error, TEXT("No file selected."));
+            return; // No file selected
+        }
+
+        FString FileContents;
+        if (!FFileHelper::LoadFileToString(FileContents, *FilePath))
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to load file from %s"), *FilePath);
+            return;
+        }
+
+        TMap<FString, FString> ParsedData;
+        TArray<FString> Lines;
+        FileContents.ParseIntoArrayLines(Lines);
+
+        // Parse lines into a key-value map
+        for (const FString& Line : Lines)
+        {
+            FString Key, Value;
+            if (Line.Split(TEXT("="), &Key, &Value))
+            {
+                ParsedData.Emplace(Key, Value);
+            }
+        }
+
+        auto CopyArrayToClipboard = [](const TArray<float>& InFloatArray) -> FString
+        {
+            FString Genotype;
+            for (int32 i = 0; i < InFloatArray.Num(); ++i)
+            {
+                Genotype += FString::SanitizeFloat(InFloatArray[i]);
+                if (i < InFloatArray.Num() - 1)
+                {
+                    Genotype += TEXT(",");
+                }
+            }
+            const FString ClipboardContent = TEXT("(") + Genotype + TEXT(")");
+            FPlatformApplicationMisc::ClipboardCopy(*ClipboardContent);
+            return ClipboardContent;
+        };
+
+        const FString Key(TEXT("Genotype"));
+        if (ParsedData.Contains(Key))
+        {
+            const TArray<float>& Genotype = UNsNNFunctionLibrary::DecompressGenotype(ParsedData[Key]);
+            CopyArrayToClipboard(Genotype);
+        }
+    })
+);
 
 APawn* UNsNNFunctionLibrary::SpawnAgent(const UObject* const InWorldContextObject, UClass* const InPawnClass, UClass* const InController, const FVector& InLocation, const FRotator& InRotation, AActor* const InOwner)
 {

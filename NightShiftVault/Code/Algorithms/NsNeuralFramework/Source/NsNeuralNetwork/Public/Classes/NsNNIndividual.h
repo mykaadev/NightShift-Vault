@@ -67,17 +67,12 @@ public:
     UFUNCTION()
     void Mutation(const float InProbability, const FRandomStream InStream);
 
-
 // Variables
 private:
 
     /** Genotype */
     UPROPERTY()
     TArray<float> Genotype;
-
-    /** Size */
-    UPROPERTY()
-    int32 Size;
 
     /** Fitness */
     UPROPERTY()

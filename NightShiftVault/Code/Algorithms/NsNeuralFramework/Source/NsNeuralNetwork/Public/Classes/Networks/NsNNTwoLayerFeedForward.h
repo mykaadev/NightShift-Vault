@@ -59,5 +59,5 @@ public:
 
     /** Output Layer Outputs */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    TArray<float> OutputLayerOutput;
+    TArray<float> OutputLayerOutputs;
 };

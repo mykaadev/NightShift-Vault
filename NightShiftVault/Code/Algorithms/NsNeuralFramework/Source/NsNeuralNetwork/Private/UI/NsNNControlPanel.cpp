@@ -1,10 +1,8 @@
 ﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
 #include "UI/NsNNControlPanel.h"
-
-#include "Classes/NsNNSessionSubsystem.h"
 #include "Components/SpinBox.h"
-#include "Kismet/GameplayStatics.h"
+#include "NsNNSessionSubsystem.h"
 
 void UNsNNControlPanel::NativePreConstruct()
 {

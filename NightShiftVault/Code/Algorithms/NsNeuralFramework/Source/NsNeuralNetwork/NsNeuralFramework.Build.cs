@@ -8,6 +8,20 @@ public class NsNeuralFramework : ModuleRules
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
+        PublicIncludePaths.AddRange(
+            new string[]
+            {
+                System.IO.Path.Combine(ModuleDirectory, "Public", "Classes")
+            }
+        );
+
+        PrivateIncludePaths.AddRange(
+            new string[]
+            {
+                System.IO.Path.Combine(ModuleDirectory, "Private", "Classes")
+            }
+        );
+
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
@@ -19,6 +33,7 @@ public class NsNeuralFramework : ModuleRules
         PrivateDependencyModuleNames.AddRange(
             new string[]
             {
+                "ApplicationCore",
                 "CoreUObject",
                 "Engine",
                 "Slate",

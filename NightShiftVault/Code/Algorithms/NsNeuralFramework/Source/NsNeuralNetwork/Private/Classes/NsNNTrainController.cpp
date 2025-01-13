@@ -1,11 +1,10 @@
 ﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
-#include "Classes/NsNNTrainController.h"
-#include "Classes/Networks/NsNNBaseNetwork.h"
-#include "Classes/NsNNSessionSubsystem.h"
+#include "NsNNTrainController.h"
+#include "NsNNSessionSubsystem.h"
 
 ANsNNTrainController::ANsNNTrainController()
-    : NeuralNetwork(nullptr)
+    : NeuralSubsystem(nullptr)
     , Fitness(0)
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -13,43 +12,31 @@ ANsNNTrainController::ANsNNTrainController()
 
 void ANsNNTrainController::BeginPlay()
 {
-    Super::BeginPlay();
-
-    if (const UWorld* const World = GetWorld())
+    if (UNsNNSessionSubsystem* const NeuralTrainSubsystem = UNsNNSessionSubsystem::GetSubsystem())
     {
-        if (const UNsNNSessionSubsystem* const NeuralSubsystem = UNsNNSessionSubsystem::GetSubsystem())
-        {
-            NeuralNetwork = NeuralSubsystem->GetNeuralNetwork();
-        }
+        InputSize = NeuralTrainSubsystem->GetSessionData().Agent.NeuralInputs;
+        HiddenLayerSize = NeuralTrainSubsystem->GetSessionData().Agent.NeuralHiddenLayerSize;
+        OutputSize = NeuralTrainSubsystem->GetSessionData().Agent.NeuralOutputs;
+
+        NeuralNetwork = NeuralTrainSubsystem->GetNeuralNetwork();
+        NeuralSubsystem = NeuralTrainSubsystem;
     }
+
+    Super::BeginPlay();
 }
 
 void ANsNNTrainController::Tick(float DeltaTime)
 {
-    Super::Tick(DeltaTime);
-
-    InputValues.Empty();
-
-    if (UNsNNSessionSubsystem* const NeuralSubsystem = UNsNNSessionSubsystem::GetSubsystem())
+    if (NeuralNetwork != nullptr && NeuralSubsystem != nullptr)
     {
-        if (NeuralNetwork != nullptr)
+        if (HasFailedAndShouldForceSkip())
         {
-            if (HasFailedAndShouldForceSkip())
-            {
-                NeuralSubsystem->EndCurrentEvaluation();
-            }
-            else
-            {
-                FeedInputs();
-                ensureMsgf(InputValues.Num() == NeuralSubsystem->GetInputSize(), TEXT("NsNNTrainController::Tick : Amount of inputs fed do not match with the Neural Network Session configuration"));
-                const TArray<float>& Outputs = NeuralNetwork->ProcessInputs(InputValues);
-                HandleOutputs(Outputs);
-            }
+            NeuralSubsystem->EndCurrentEvaluation();
         }
-
     }
-}
 
+    Super::Tick(DeltaTime);
+}
 void ANsNNTrainController::OnResetRequested_Implementation()
 {
     // Should be extended by children
@@ -64,14 +51,4 @@ bool ANsNNTrainController::HasFailedAndShouldForceSkip_Implementation()
 {
     // Should be overriden by children
     return false;
-}
-
-void ANsNNTrainController::FeedInputs_Implementation()
-{
-    // Should be overriden by children
-}
-
-void ANsNNTrainController::HandleOutputs_Implementation(const TArray<float>& InOutputs)
-{
-    // Should be overriden by children
 }

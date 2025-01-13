@@ -21,18 +21,17 @@ public:
     /** Constructor */
     UNsNNSessionSubsystem();
 
-    //~ Begin USubsystem Interface
-    virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-    virtual void Deinitialize() override;
-    //~ End USubsystem Interface
-
     /** Get Session Subsystem */
     UFUNCTION(BlueprintCallable, Category = "Neural Framework")
     static UNsNNSessionSubsystem* GetSubsystem();
 
+    /** Get Control Panel */
+    UFUNCTION()
+    class UNsNNControlPanel* GetControlPanel() const;
+
     /** Initialize session */
     UFUNCTION()
-    void Init() const;
+    void Init();
 
     /** Set Random Seed */
     UFUNCTION()
@@ -201,6 +200,10 @@ public:
 // Variables
 private:
 
+    /** Control Panel */
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<class UNsNNControlPanel> ControlPanel;
+
     /** Session Data */
     UPROPERTY(VisibleAnywhere)
     FNsTrainSessionSetup SessionData;
@@ -296,10 +299,4 @@ private:
     /** Genotype Override */
     UPROPERTY()
     TArray<float> SessionOverrideGenotype;
-
-// Events
-protected:
-
-    /** On game viewport intialization */
-    FDelegateHandle OnGameViewportInitialization;
 };
