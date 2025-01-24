@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Controller.h"
+#include "Libraries/NsNNFunctionLibrary.h"
 #include "NsNNRuntimeController.generated.h"
 
 /**
@@ -20,31 +21,44 @@ public:
     /** Constructor */
     ANsNNRuntimeController();
 
+    /** Destructor */
+    ~ANsNNRuntimeController();
+
     //~ Begin AController Interface
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
     //~ End AController Interface
+
+    /** Initialize */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
+    void Initialize();
+    virtual void Initialize_Implementation();
 
     /** Feed Inputs */
     UFUNCTION(BlueprintNativeEvent, Category = "NN Neural Controller")
     TArray<float> FeedInputs();
     virtual TArray<float> FeedInputs_Implementation();
 
-    /** Handle Outputs */
+    /** Feed Expected Outputs */
+    UFUNCTION(BlueprintNativeEvent, Category = "NN Neural Controller")
+    TArray<float> FeedExpectedOutputs();
+    virtual TArray<float> FeedExpectedOutputs_Implementation();
+
+    /** Handle Predicted Outputs */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
-    void HandleOutputs(const TArray<float>& InOutputs);
-    virtual void HandleOutputs_Implementation(const TArray<float>& InOutputs);
+    void HandlePredictedOutputs(const TArray<float>& InOutputs);
+    virtual void HandlePredictedOutputs_Implementation(const TArray<float>& InOutputs);
+
+    /** Callback for when the user  imports train data from a session file */
+    UFUNCTION()
+    void OnTrainDataImported(const TMap<FString, FString>& InParsedData, const class AController* const InController);
 
 // Variables
 public:
 
-    /** Neural Network to use */
-    UPROPERTY(EditAnywhere)
-    TSubclassOf<class UNsNNBaseNetwork> NeuralNetworkClass;
-
     /** Neural Network */
     UPROPERTY()
-    TObjectPtr<class UNsNNBaseNetwork> NeuralNetwork;
+    TObjectPtr<class UNsNNArchitecture> NeuralNetwork;
 
     /** Inputs size */
     UPROPERTY(EditAnywhere)
@@ -61,4 +75,12 @@ public:
     /** Genotype */
     UPROPERTY(EditAnywhere)
     TArray<float> Genotype;
+
+    /** Stored Inputs */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TArray<float> StoredInputs;
+
+    /** Stored Outputs */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TArray<float> StoredPredictedOutputs;
 };

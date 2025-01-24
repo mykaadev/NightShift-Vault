@@ -51,6 +51,18 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 NeuralOutputs;
 
+    /** Training: Learning rate */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float LearningRate;
+
+    /** Training: Dropout rate */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float DropoutRate;
+
+    /** Training: L2 Regulator strength */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float L2RegulatorStrength;
+
 // Functions
 public:
 
@@ -139,7 +151,7 @@ public:
 
     /** Neural Network */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TSoftClassPtr<class UNsNNBaseNetwork> NeuralNetwork;
+    TSoftClassPtr<class UNsNNArchitecture> NeuralNetwork;
 
     /** Population Setup */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)

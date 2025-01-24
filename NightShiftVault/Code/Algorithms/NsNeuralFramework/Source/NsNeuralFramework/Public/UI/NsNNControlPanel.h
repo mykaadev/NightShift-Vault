@@ -52,6 +52,18 @@ public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
     TObjectPtr<class USpinBox> SBMutation;
 
+    /** Slider to define Learning Rate */
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
+    TObjectPtr<class USpinBox> SBLearningRate;
+
+    /** Slider to define Dropout Rate */
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
+    TObjectPtr<class USpinBox> SBDropoutRate;
+
+    /** Slider to define L2 Regulator */
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
+    TObjectPtr<class USpinBox> SBL2Regulator;
+
     /** SpinBox to define Random Seed */
     UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(BindWidget))
     TObjectPtr<class USpinBox> SBInputs;

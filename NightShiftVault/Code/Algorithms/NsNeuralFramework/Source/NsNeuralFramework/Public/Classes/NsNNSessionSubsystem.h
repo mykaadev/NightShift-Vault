@@ -49,6 +49,10 @@ public:
     UFUNCTION()
     void SetNeuralNetworkStructure(const int32 InNeuralInputs, const int32 InNeuralHiddenLayerSize, const int32 InNeuralOutputs);
 
+    /** Set the Neural Network regulators */
+    UFUNCTION()
+    void SetNeuralNetworkRegulators(const float InLearningRate, const float InDropout, const float InL2);
+
     /** Set the Session Data */
     UFUNCTION(BlueprintCallable)
     void SetSessionData(const FNsTrainSessionSetup& InSessionData);
@@ -58,15 +62,15 @@ public:
     int32 GetInputSize() const;
 
     /** Get Neural Network */
-    UFUNCTION()
-    class UNsNNBaseNetwork* GetNeuralNetwork() const;
+    UFUNCTION(BlueprintCallable)
+    class UNsNNArchitecture* GetNeuralNetwork() const;
 
     /** Set Neural Network */
     UFUNCTION()
-    void SetNeuralNetwork(class UNsNNBaseNetwork* const InNetwork);
+    void SetNeuralNetwork(class UNsNNArchitecture* const InNetwork);
 
     /** Get Agent Controller */
-    UFUNCTION()
+    UFUNCTION(BlueprintCallable)
     class ANsNNTrainController* GetAgentController() const;
 
     /** Set Agent Controller */
@@ -197,6 +201,10 @@ public:
     UFUNCTION(BlueprintCallable)
     FNsTrainSessionSetup& GetMutableSessionData();
 
+    /** Is there any agent training */
+    UFUNCTION(BlueprintCallable)
+    bool IsTraining() const;
+
 // Variables
 private:
 
@@ -222,7 +230,7 @@ private:
 
     /** Neural Network */
     UPROPERTY()
-    TObjectPtr<class UNsNNBaseNetwork> NeuralNetwork;
+    TObjectPtr<class UNsNNArchitecture> NeuralNetwork;
 
     /** Population */
     UPROPERTY()

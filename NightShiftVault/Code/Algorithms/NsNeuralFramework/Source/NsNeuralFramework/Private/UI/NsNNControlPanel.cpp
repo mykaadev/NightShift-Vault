@@ -54,6 +54,13 @@ void UNsNNControlPanel::RequestStartTrainSession() const
             NeuralSubsystem->SetNeuralNetworkStructure(InputSize, HiddenLayerSize, OutputSize);
         }
 
+        if (SBLearningRate != nullptr && SBDropoutRate != nullptr && SBL2Regulator != nullptr)
+        {
+            const float LearningRate = SBLearningRate->GetValue();
+            const float DropoutRate = SBDropoutRate->GetValue();
+            const float L2Regulator = SBL2Regulator->GetValue();
+            NeuralSubsystem->SetNeuralNetworkRegulators(LearningRate, DropoutRate, L2Regulator);
+        }
         NeuralSubsystem->OnStartRequestReceived();
     }
 }

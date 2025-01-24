@@ -21,9 +21,12 @@ public:
     ANsNNTrainController();
 
     //~ Begin AController Interface
-    virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
     //~ End AController Interface
+
+    //~ Begin ANsRuntimeController Interface
+    virtual void Initialize_Implementation() override;
+    //~ End ANsRuntimeController Interface
 
     /** On Reset Requested */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
@@ -42,10 +45,6 @@ public:
 
 // Variables
 public:
-
-    /** Neural Subsystem */
-    UPROPERTY(VisibleAnywhere)
-    TObjectPtr<class UNsNNSessionSubsystem> NeuralSubsystem;
 
     /** Fitness */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -9,13 +9,34 @@ UNsNNIndividual::UNsNNIndividual()
     : Fitness(0)
 {}
 
-void UNsNNIndividual::Construct(const FRandomStream InRandomStream, const int32 InSize)
+void UNsNNIndividual::Construct(const FRandomStream InRandomStream, const int32 GenotypeSize, const int32 InInputSize, const int32 InHiddenSize, const int32 InOutputSize)
 {
-    Genotype.SetNum(InSize);
+    Genotype.SetNum(GenotypeSize);
 
-    for (float& Gene : Genotype)
+    // Initialize for the input to hidden layer weights (Xavier initialization)
+    const float XavierLimitHidden = FMath::Sqrt(6.f / static_cast<float>(InInputSize + InHiddenSize));
+
+    // Initialize for the hidden to output layer weights (Xavier initialization)
+    const float XavierLimitOutput = FMath::Sqrt(6.f / static_cast<float>(InHiddenSize + InOutputSize));
+
+    int32 GeneIndex = 0;
+
+    // Set weights for the input to hidden layer
+    for (int32 i = 0; i < InHiddenSize; ++i)
     {
-        Gene = UKismetMathLibrary::RandomFloatInRangeFromStream(InRandomStream, -4.f, 4.f);
+        for (int32 j = 0; j < InInputSize; ++j)
+        {
+            Genotype[GeneIndex++] = UKismetMathLibrary::RandomFloatInRangeFromStream(InRandomStream, -XavierLimitHidden, XavierLimitHidden);
+        }
+    }
+
+    // Set weights for the hidden to output layer
+    for (int32 i = 0; i < InOutputSize; ++i)
+    {
+        for (int32 j = 0; j < InHiddenSize; ++j)
+        {
+            Genotype[GeneIndex++] = UKismetMathLibrary::RandomFloatInRangeFromStream(InRandomStream, -XavierLimitOutput, XavierLimitOutput);
+        }
     }
 }
 

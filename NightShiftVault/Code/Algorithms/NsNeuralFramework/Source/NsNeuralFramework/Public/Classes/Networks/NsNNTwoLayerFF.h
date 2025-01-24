@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NsNNBaseNetwork.h"
-#include "NsNNTwoLayerFeedForward.generated.h"
+#include "NsNNArchitecture.h"
+#include "NsNNTwoLayerFF.generated.h"
 
 /**
  * Two layer feed forward neural network
  */
 UCLASS()
-class NSNEURALFRAMEWORK_API UNsNNTwoLayerFeedForward : public UNsNNBaseNetwork
+class NSNEURALFRAMEWORK_API UNsNNTwoLayerFF : public UNsNNArchitecture
 {
     GENERATED_BODY()
 
@@ -18,17 +18,20 @@ class NSNEURALFRAMEWORK_API UNsNNTwoLayerFeedForward : public UNsNNBaseNetwork
 public:
 
     /** Constructor */
-    UNsNNTwoLayerFeedForward();
+    UNsNNTwoLayerFF();
 
-    //~ Begin UNsNNBaseNetwork Interface
-    virtual int32 Initialize(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs) override;
-    virtual void SetWeights(const TArray<float>& InGenotype) override;
-    virtual const TArray<float> ProcessInputs(const TArray<float>& InInputs) override;
-    //~ End UNsNNBaseNetwork Interface
+    //~ Begin UNsNNArchitecture Interface
+    virtual int32 InitializeNetwork(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs) override;
+    virtual void InitializeRegulators(const float InLearningRate, const float InDropoutRate, const float InL2RegulatorStrength) override;
+    virtual void SetNetworkWeights(const TArray<float>& InGenotype) override;
+    virtual void UpdateRegularizationRates() override;
+    virtual const TArray<float> ProcessInformation(const TArray<float>& InInputs, class ANsNNRuntimeController* const InController) override;
+    virtual TArray<FVector2D> GetNodePositions() const override;
+    virtual TArray<TTuple<int32, int32, float>> GetConnections() const override;
+    //~ End UNsNNArchitecture Interface
 
-    /** Forward Propagation */
-    UFUNCTION()
-    TArray<float> ForwardPropagation(const TArray<float>& InInputs);
+    /** Forward Propagate */
+    TArray<float> ForwardPropagate(const TArray<float>& InInputs);
 
 // Variables
 public:

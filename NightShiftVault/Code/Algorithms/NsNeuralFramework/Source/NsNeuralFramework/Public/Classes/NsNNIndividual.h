@@ -22,7 +22,7 @@ public:
 
     /** Construct */
     UFUNCTION()
-    void Construct(const FRandomStream InRandomStream, const int32 InSize);
+    void Construct(const FRandomStream InRandomStream, const int32 GenotypeSize, const int32 InInputSize, const int32 InHiddenSize, const int32 InOutputSize);
 
     /** Construct Individual with a predefined genotype */
     void Construct(const FRandomStream InRandomStream, const int32 InSize, const TArray<float>& InGenotype);

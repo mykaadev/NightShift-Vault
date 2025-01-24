@@ -6,6 +6,31 @@
 #include "IDesktopPlatform.h"
 #include "NsNNSessionSubsystem.h"
 #include "NsNNSettings.h"
+#include "NsNNTrainController.h"
+
+FNsNNOnGenotypeImport UNsNNFunctionLibrary::OnGenotypeImport;
+FNsNNOnTrainDataImport UNsNNFunctionLibrary::OnTrainDataImport;
+
+FAutoConsoleCommand ExecNsNeuralFrameworkImportTrainDataCmd
+(
+    TEXT("NsNeuralFramework.ImportTrainData"),
+    TEXT("Imports the data from a train session file"),
+    FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args)
+    {
+        if (const UNsNNSessionSubsystem* const NeuralSubsystem = UNsNNSessionSubsystem::GetSubsystem())
+        {
+            if (!NeuralSubsystem->IsTraining())
+            {
+                TMap<FString, FString> InOutParsedData;
+                if (UNsNNFunctionLibrary::LoadAndParseTrainFileData(InOutParsedData, TEXT("=")))
+                {
+                    const AController* const FoundController = UNsNNFunctionLibrary::GetValueFromTrainData<AController*>(InOutParsedData, TEXT("Controller"));
+                    UNsNNFunctionLibrary::OnTrainDataImport.Broadcast(InOutParsedData, FoundController);
+                }
+            }
+        }
+    })
+);
 
 FAutoConsoleCommand ExecNsNeuralFrameworkStartTrainSessionCmd
 (
@@ -99,11 +124,12 @@ FAutoConsoleCommand ExecNsNeuralFrameworkImportGenotypeFromFileCmd
         {
             const TArray<float>& Genotype = UNsNNFunctionLibrary::DecompressGenotype(ParsedData[Key]);
             CopyArrayToClipboard(Genotype);
+            UNsNNFunctionLibrary::OnGenotypeImport.Broadcast(Genotype);
         }
     })
 );
 
-APawn* UNsNNFunctionLibrary::SpawnAgent(const UObject* const InWorldContextObject, UClass* const InPawnClass, UClass* const InController, const FVector& InLocation, const FRotator& InRotation, AActor* const InOwner)
+APawn* UNsNNFunctionLibrary::SpawnAndPocessAgent(const UObject* const InWorldContextObject, UClass* const InPawnClass, UClass* const InController, const FVector& InLocation, const FRotator& InRotation, AActor* const InOwner)
 {
     APawn* Agent = nullptr;
     if (GEngine != nullptr)
@@ -115,14 +141,14 @@ APawn* UNsNNFunctionLibrary::SpawnAgent(const UObject* const InWorldContextObjec
             ActorSpawnParams.Owner = InOwner;
             ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
             Agent = World->SpawnActor<APawn>(InPawnClass, InLocation, InRotation, ActorSpawnParams);
-            SpawnControllerInAgent(InController, Agent, World);
+            ChangeControllerForAgent(InController, Agent, World);
         }
     }
 
     return Agent;
 }
 
-AController* UNsNNFunctionLibrary::SpawnControllerInAgent(UClass* const InController, APawn* const InAgent, UWorld* const InWorld)
+AController* UNsNNFunctionLibrary::ChangeControllerForAgent(UClass* const InController, APawn* const InAgent, UWorld* const InWorld)
 {
     AController* Controller = nullptr;
     if (InWorld != nullptr && InAgent != nullptr && InController != nullptr)
@@ -183,4 +209,73 @@ TArray<float> UNsNNFunctionLibrary::DecompressGenotype(const FString& InGenotype
 FNsTrainSessionSetup UNsNNFunctionLibrary::GetSessionDataFromRow(const FNsTrainSessionRowHandle& InRowHandle)
 {
     return InRowHandle.SessionSetup;
+}
+
+bool UNsNNFunctionLibrary::LoadAndFindValueFromTrainDataFile(const FString& InKey, FString& OutValue, const FString& InSplitDelimiter /**= TEXT("=") */)
+{
+    TMap<FString, FString> InOutParsedData;
+    if (LoadAndParseTrainFileData(InOutParsedData, InSplitDelimiter))
+    {
+        if (InOutParsedData.Contains(InKey))
+        {
+            OutValue = InOutParsedData[InKey];
+        }
+    }
+
+    return true;
+}
+
+bool UNsNNFunctionLibrary::LoadAndParseTrainFileData(TMap<FString, FString>& InOutParsedData, const FString& InSplitDelimiter /**= TEXT("=") */)
+{
+    FString FilePath;
+    InOutParsedData.Empty();
+
+    // Open a file dialog to select the file
+    if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
+    {
+        const FString BasePath = Settings->DataExportPath;
+        if (IDesktopPlatform* const DesktopPlatform = FDesktopPlatformModule::Get())
+        {
+            const void* const ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+            TArray<FString> OutFiles;
+            if (DesktopPlatform->OpenFileDialog(ParentWindowHandle, TEXT("Select Session Data File"), !FPaths::DirectoryExists(BasePath) || BasePath.IsEmpty() ? FPaths::ProjectDir() : BasePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
+            {
+                FilePath = OutFiles[0];
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("User canceled file selection."));
+                return false; // User canceled
+            }
+        }
+    }
+
+    if (FilePath.IsEmpty())
+    {
+        UE_LOG(LogTemp, Error, TEXT("No file selected."));
+        return false; // No file selected
+    }
+
+    FString FileContents;
+    if (!FFileHelper::LoadFileToString(FileContents, *FilePath))
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to load file from %s"), *FilePath);
+        return false;
+    }
+
+    TArray<FString> Lines;
+    FileContents.ParseIntoArrayLines(Lines);
+    InOutParsedData.Reserve(Lines.Num());
+
+    // Parse lines into a key-value map
+    for (const FString& Line : Lines)
+    {
+        FString Key, Value;
+        if (Line.Split(InSplitDelimiter, &Key, &Value))
+        {
+            InOutParsedData.Emplace(Key, Value);
+        }
+    }
+
+    return InOutParsedData.Num() > 0;
 }
