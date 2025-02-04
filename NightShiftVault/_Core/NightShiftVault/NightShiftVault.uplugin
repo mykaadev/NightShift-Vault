@@ -23,6 +23,10 @@
 	"Plugins":
 	[
 		{
+			"Name": "NsArt",
+			"Enabled": true
+		},
+		{
 			"Name": "NsNeuralFramework",
 			"Enabled": true
 		},
