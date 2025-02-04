@@ -73,3 +73,5 @@
 
 # Cache files for the editor to use
 **/DerivedDataCache/*
+/NightShiftVault/Art/NsArt/Content/Enviromnent/Atmosphere
+/NightShiftVault/Art/NsArt/Content/Assets/Prototype
