@@ -42,7 +42,11 @@ Visuals: 🟦🟦<br>
 Utilities: 🟪🟪🟪🟪
 </div>
 
+
 ## 📦 Features
+<div align="center">
+  <p>🪛 Cleaning Up • ⚡In Progess • ⏳ Waiting Merge • 🔒 Closed Development</p>
+</div>
 <table>
   <tr>
     <th>AI</th>
@@ -51,15 +55,16 @@ Utilities: 🟪🟪🟪🟪
   </tr>
   <tr>
     <th>Gameplay</th>
-    <td>Achievements ⚡</td>
-    <td>Interaction</td>
     <td>Save Wizard ⚡</td>
+    <td>Atmosphere 🔒</td>
+    <td>Achievements ⏳</td>
+    <td>Interaction</td>
   </tr>
   <tr>
     <th>Tools</th>
     <td>Debug Console 🪛</td>
     <td>Dialogue Editor 🪛</td>
-    <td>Project Maid 🪛</td>
+    <td>Project Maid 🔒</td>
   </tr>
   <tr>
     <th>Visuals</th>
@@ -69,14 +74,11 @@ Utilities: 🟪🟪🟪🟪
     <tr>
     <th>Utility</th>
     <td>Neural Framework</td>
-    <td>Wave Function Collapse 🪛</td>
-    <td>Screen Recorder 🪛</td>
-    <td>Feedback 🪛</td>
+    <td>Wave Function Collapse ⏳</td>
+    <td>Screen Recorder ⏳</td>
+    <td>Feedback ⏳</td>
   </tr>
 </table>
-<div align="center">
-  <p>🪛 Cleaning Up •⚡In Progess</p>
-</div>
 
 ## ⚙️ Requirements
 Unreal Engine 5.2+
