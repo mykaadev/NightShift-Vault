@@ -345,3 +345,19 @@ float UNsNNRegularizedMLP::GetSigmoidDerivative(const float InValue) const
 {
     return InValue * (1.0f - InValue); // Sigmoid derivative: f'(x) = f(x) * (1 - f(x))
 }
+
+TArray<float> UNsNNRegularizedMLP::GetNodeValues() const
+{
+    TArray<float> NodeValues;
+
+    // Append input values (assumed last input used in ForwardPropagate)
+    NodeValues.Append(InputLayerValues);
+
+    // Append hidden layer activations
+    NodeValues.Append(HiddenLayerOutputs);
+
+    // Append output layer activations
+    NodeValues.Append(OutputLayerOutputs);
+
+    return NodeValues;
+}

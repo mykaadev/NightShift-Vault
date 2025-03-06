@@ -29,6 +29,7 @@ public:
     virtual float OnFitnessCompute(const float InFitness) override;
     virtual TArray<FVector2D> GetNodePositions() const override;
     virtual TArray<TTuple<int32, int32, float>> GetConnections() const override;
+    virtual TArray<float> GetNodeValues() const override;
     //~ End UNsNNArchitecture Interface
 
     /** Forward Propagate */
@@ -68,6 +69,10 @@ public:
     /** Second Weight Group */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TArray<float> WeightGroupTwo;
+
+    /** Input Layer Values */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TArray<float> InputLayerValues;
 
     /** Hidden Layer Outputs */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

@@ -98,9 +98,15 @@ void UNsNNTwoLayerFF::SetNetworkWeights(const TArray<float>& InGenotype)
     }
 }
 
+float UNsNNTwoLayerFF::OnFitnessCompute(const float InFitness)
+{
+    return InFitness; // Default, this function needs to be implemented
+}
 
 TArray<float> UNsNNTwoLayerFF::ForwardPropagate(const TArray<float>& InInputs)
 {
+    InputLayerValues = InInputs;
+
     if (InInputs.Num() != InputLayerSize)
     {
         // If you are here, take a look into your input feeding logic, the problem lies there
@@ -143,25 +149,31 @@ TArray<FVector2D> UNsNNTwoLayerFF::GetNodePositions() const
 {
     TArray<FVector2D> NodePositions;
 
-    const float LayerSpacing = 100.f; // Spacing between layers
-    const float NodeSpacing = 25.f;   // Spacing between nodes
+    const float LayerSpacing = 200.f;  // Spacing between layers
+    const float NodeSpacing = 15.f;    // Spacing between nodes
 
-    // Input layer
+    // Calculate the total height of the network
+    const float TotalHeight = (InputLayerSize + HiddenLayerSize + OutputLayerSize) * NodeSpacing;
+
+    // Calculate the starting Y-position to center the network
+    const float CenterY = TotalHeight * 0.5f;
+
+    // Input layer (Position input nodes vertically centered)
     for (int32 i = 0; i < InputLayerSize; ++i)
     {
-        NodePositions.Emplace(FVector2D(0.f, i * NodeSpacing));
+        NodePositions.Emplace(FVector2D(0.f, CenterY - (InputLayerSize * NodeSpacing * 0.5f) + i * NodeSpacing));
     }
 
-    // Hidden layer
+    // Hidden layer (Position hidden nodes vertically centered)
     for (int32 i = 0; i < HiddenLayerSize; ++i)
     {
-        NodePositions.Emplace(FVector2D(LayerSpacing, i * NodeSpacing));
+        NodePositions.Emplace(FVector2D(LayerSpacing, CenterY - (HiddenLayerSize * NodeSpacing * 0.5f) + i * NodeSpacing));
     }
 
-    // Output layer
+    // Output layer (Position output nodes vertically centered)
     for (int32 i = 0; i < OutputLayerSize; ++i)
     {
-        NodePositions.Emplace(FVector2D(LayerSpacing * 2, i * NodeSpacing));
+        NodePositions.Emplace(FVector2D(LayerSpacing * 2, CenterY - (OutputLayerSize * NodeSpacing * 0.5f) + i * NodeSpacing));
     }
 
     return NodePositions;
@@ -196,4 +208,20 @@ TArray<TTuple<int32, int32, float>> UNsNNTwoLayerFF::GetConnections() const
     }
 
     return Connections;
+}
+
+TArray<float> UNsNNTwoLayerFF::GetNodeValues() const
+{
+    TArray<float> NodeValues;
+
+    // Append input values (assumed last input used in ForwardPropagate)
+    NodeValues.Append(InputLayerValues);
+
+    // Append hidden layer activations
+    NodeValues.Append(HiddenLayerOutputs);
+
+    // Append output layer activations
+    NodeValues.Append(OutputLayerOutputs);
+
+    return NodeValues;
 }

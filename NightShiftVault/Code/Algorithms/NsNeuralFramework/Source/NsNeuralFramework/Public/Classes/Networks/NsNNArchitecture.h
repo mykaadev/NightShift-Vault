@@ -27,10 +27,10 @@ public:
     {}
 
     /** Setup Network */
-    virtual int32 InitializeNetwork(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs) PURE_VIRTUAL(SetupNetwork, return INDEX_NONE; )
+    virtual int32 InitializeNetwork(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs) PURE_VIRTUAL(InitializeNetwork, return INDEX_NONE; )
 
     /** Initialize Network */
-    virtual void InitializeRegulators(const float InLearningRate, const float InDropoutRate, const float InL2RegulatorStrength) PURE_VIRTUAL(InitializeNetwork, return; )
+    virtual void InitializeRegulators(const float InLearningRate, const float InDropoutRate, const float InL2RegulatorStrength) PURE_VIRTUAL(InitializeRegulators, return; )
 
     /** Set Network Weights */
     virtual void SetNetworkWeights(const TArray<float>& InGenotype) PURE_VIRTUAL(SetNetworkWeights, return; )
@@ -49,6 +49,9 @@ public:
 
     /** Get connections */
     virtual TArray<TTuple<int32, int32, float>> GetConnections() const PURE_VIRTUAL(GetConnections, return {}; )
+
+    /** Get Node Values */
+    virtual TArray<float> GetNodeValues() const PURE_VIRTUAL(GetNodeValues, return {}; )
 
 // Variables
 public:

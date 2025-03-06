@@ -21,22 +21,26 @@ void UNsNNIndividual::Construct(const FRandomStream InRandomStream, const int32 
 
     int32 GeneIndex = 0;
 
-    // Set weights for the input to hidden layer
+    // Initialize weights for the input to hidden layer
     for (int32 i = 0; i < InHiddenSize; ++i)
     {
         for (int32 j = 0; j < InInputSize; ++j)
         {
             Genotype[GeneIndex++] = UKismetMathLibrary::RandomFloatInRangeFromStream(InRandomStream, -XavierLimitHidden, XavierLimitHidden);
         }
+        // Bias term for the hidden layer node
+        Genotype[GeneIndex++] = UKismetMathLibrary::RandomFloatInRangeFromStream(InRandomStream, -XavierLimitHidden, XavierLimitHidden);
     }
 
-    // Set weights for the hidden to output layer
+    // Initialize weights for the hidden to output layer
     for (int32 i = 0; i < InOutputSize; ++i)
     {
         for (int32 j = 0; j < InHiddenSize; ++j)
         {
             Genotype[GeneIndex++] = UKismetMathLibrary::RandomFloatInRangeFromStream(InRandomStream, -XavierLimitOutput, XavierLimitOutput);
         }
+        // Bias term for the output layer node
+        Genotype[GeneIndex++] = UKismetMathLibrary::RandomFloatInRangeFromStream(InRandomStream, -XavierLimitOutput, XavierLimitOutput);
     }
 }
 

@@ -39,10 +39,6 @@ public:
         InFlags |= static_cast<uint8>(InNewState);
     }
 
-    /** Spawn AI from class */
-    UFUNCTION()
-    static class APawn* SpawnAndPocessAgent(const class UObject* const InWorldContextObject, class UClass* const InPawnClass, class UClass* const InController, const FVector& InLocation, const FRotator& InRotation, class AActor* const InOwner);
-
     /** Spawn controller in agent */
     UFUNCTION()
     static class AController* ChangeControllerForAgent(class UClass* const InController, class APawn* const InAgent, class UWorld* const InWorld);

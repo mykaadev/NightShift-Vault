@@ -28,6 +28,11 @@ public:
     virtual void Initialize_Implementation() override;
     //~ End ANsRuntimeController Interface
 
+    /** On Controller Spawn */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
+    void OnControllerSpawn(const class UClass* const InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation);
+    virtual void OnControllerSpawn_Implementation(class UClass* const InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation);
+
     /** On Reset Requested */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
     void OnResetRequested();
@@ -38,10 +43,21 @@ public:
     float ComputeFitness();
     virtual float ComputeFitness_Implementation();
 
+    /** Update Fitness */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
+    void UpdateFitness(const float InDeltaTime);
+    virtual void UpdateFitness_Implementation(const float InDeltaTime);
+
     /** Has Failed And Should Force Skip */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
     bool HasFailedAndShouldForceSkip();
     virtual bool HasFailedAndShouldForceSkip_Implementation();
+
+#if WITH_EDITOR
+    /** Focus Active Controlled Pawn */
+    UFUNCTION(BlueprintCallable, Category = "NN Neural Controller")
+    void FocusControlledPawn() const;
+#endif // WITH_EDITOR
 
 // Variables
 public:

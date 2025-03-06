@@ -24,10 +24,12 @@ public:
     virtual int32 InitializeNetwork(const int32 InInputs, const int32 InHiddenLayer, const int32 InOutputs) override;
     virtual void InitializeRegulators(const float InLearningRate, const float InDropoutRate, const float InL2RegulatorStrength) override;
     virtual void SetNetworkWeights(const TArray<float>& InGenotype) override;
+    virtual float OnFitnessCompute(const float InFitness) override;
     virtual void UpdateRegularizationRates() override;
     virtual const TArray<float> ProcessInformation(const TArray<float>& InInputs, class ANsNNRuntimeController* const InController) override;
     virtual TArray<FVector2D> GetNodePositions() const override;
     virtual TArray<TTuple<int32, int32, float>> GetConnections() const override;
+    virtual TArray<float> GetNodeValues() const override;
     //~ End UNsNNArchitecture Interface
 
     /** Forward Propagate */
@@ -55,6 +57,10 @@ public:
     /** Second Weight Group */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TArray<float> WeightGroupTwo;
+
+    /** Input Layer Values */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TArray<float> InputLayerValues;
 
     /** Hidden Layer Outputs */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

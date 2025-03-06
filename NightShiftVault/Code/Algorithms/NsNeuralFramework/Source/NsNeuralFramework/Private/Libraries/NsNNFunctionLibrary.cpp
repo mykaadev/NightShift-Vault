@@ -54,38 +54,16 @@ FAutoConsoleCommand ExecNsNeuralFrameworkImportGenotypeFromFileCmd
     TEXT("Imports a genotype from a file to the user clipboard"),
     FConsoleCommandWithArgsDelegate::CreateLambda([](const TArray<FString>& Args)
     {
-        FString FilePath;
-
-        // Open a file dialog to select the file
-        if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
+        const FString BasePath = FPaths::Combine(FPaths::ProjectConfigDir(), TEXT("Neural"));
+        if (!FPaths::DirectoryExists(BasePath))
         {
-            const FString BasePath = Settings->DataExportPath;
-            if (IDesktopPlatform* const DesktopPlatform = FDesktopPlatformModule::Get())
-            {
-                const void* const ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
-                TArray<FString> OutFiles;
-                if (DesktopPlatform->OpenFileDialog(ParentWindowHandle, TEXT("Import Genotype from session file"), !FPaths::DirectoryExists(BasePath) || BasePath.IsEmpty() ? FPaths::ProjectDir() : BasePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
-                {
-                    FilePath = OutFiles[0];
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Warning, TEXT("User canceled file selection."));
-                    return; // User canceled
-                }
-            }
-        }
-
-        if (FilePath.IsEmpty())
-        {
-            UE_LOG(LogTemp, Error, TEXT("No file selected."));
-            return; // No file selected
+            IFileManager::Get().MakeDirectory(*BasePath, true);
         }
 
         FString FileContents;
-        if (!FFileHelper::LoadFileToString(FileContents, *FilePath))
+        if (!FFileHelper::LoadFileToString(FileContents, *BasePath))
         {
-            UE_LOG(LogTemp, Error, TEXT("Failed to load file from %s"), *FilePath);
+            UE_LOG(LogTemp, Error, TEXT("Failed to load file from %s"), *BasePath);
             return;
         }
 
@@ -128,25 +106,6 @@ FAutoConsoleCommand ExecNsNeuralFrameworkImportGenotypeFromFileCmd
         }
     })
 );
-
-APawn* UNsNNFunctionLibrary::SpawnAndPocessAgent(const UObject* const InWorldContextObject, UClass* const InPawnClass, UClass* const InController, const FVector& InLocation, const FRotator& InRotation, AActor* const InOwner)
-{
-    APawn* Agent = nullptr;
-    if (GEngine != nullptr)
-    {
-        UWorld* const World = GEngine->GetWorldFromContextObject(InWorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
-        if (World != nullptr && InPawnClass != nullptr)
-        {
-            FActorSpawnParameters ActorSpawnParams;
-            ActorSpawnParams.Owner = InOwner;
-            ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-            Agent = World->SpawnActor<APawn>(InPawnClass, InLocation, InRotation, ActorSpawnParams);
-            ChangeControllerForAgent(InController, Agent, World);
-        }
-    }
-
-    return Agent;
-}
 
 AController* UNsNNFunctionLibrary::ChangeControllerForAgent(UClass* const InController, APawn* const InAgent, UWorld* const InWorld)
 {
@@ -227,26 +186,23 @@ bool UNsNNFunctionLibrary::LoadAndFindValueFromTrainDataFile(const FString& InKe
 
 bool UNsNNFunctionLibrary::LoadAndParseTrainFileData(TMap<FString, FString>& InOutParsedData, const FString& InSplitDelimiter /**= TEXT("=") */)
 {
-    FString FilePath;
     InOutParsedData.Empty();
 
+    FString FilePath = FPaths::Combine(FPaths::ProjectConfigDir(), TEXT("Neural"));;
+
     // Open a file dialog to select the file
-    if (const UNsNNSettings* const Settings = GetDefault<UNsNNSettings>())
+    if (IDesktopPlatform* const DesktopPlatform = FDesktopPlatformModule::Get())
     {
-        const FString BasePath = Settings->DataExportPath;
-        if (IDesktopPlatform* const DesktopPlatform = FDesktopPlatformModule::Get())
+        const void* const ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+        TArray<FString> OutFiles;
+        if (DesktopPlatform->OpenFileDialog(ParentWindowHandle, TEXT("Import Genotype from session file"), !FPaths::DirectoryExists(FilePath) || FilePath.IsEmpty() ? FPaths::ProjectDir() : FilePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
         {
-            const void* const ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
-            TArray<FString> OutFiles;
-            if (DesktopPlatform->OpenFileDialog(ParentWindowHandle, TEXT("Select Session Data File"), !FPaths::DirectoryExists(BasePath) || BasePath.IsEmpty() ? FPaths::ProjectDir() : BasePath, TEXT(""), TEXT("Text Files (*.txt)|*.txt|All Files (*.*)|*.*"), EFileDialogFlags::None, OutFiles))
-            {
-                FilePath = OutFiles[0];
-            }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("User canceled file selection."));
-                return false; // User canceled
-            }
+            FilePath = OutFiles[0];
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("User canceled file selection."));
+            return false; // User canceled
         }
     }
 

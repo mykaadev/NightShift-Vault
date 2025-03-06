@@ -36,6 +36,7 @@ public class NsNeuralFramework : ModuleRules
                 "ApplicationCore",
                 "CoreUObject",
                 "Engine",
+                "InputCore",
                 "Slate",
                 "SlateCore",
                 "UMG",
@@ -51,5 +52,16 @@ public class NsNeuralFramework : ModuleRules
                 // ... add any modules that your module loads dynamically here ...
             }
         );
+
+        if (Target.Type == TargetRules.TargetType.Editor)
+        {
+            PublicDependencyModuleNames.AddRange(
+                new string[]
+                {
+                    "UnrealEd",
+                    "LevelEditor"
+                }
+            );
+        }
     }
 }

@@ -24,8 +24,4 @@ public:
     /** Sessions Data Table */
     UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Data")
     TSoftObjectPtr<class UDataTable> SessionDataTable;
-
-    /** Data Export Path */
-    UPROPERTY(Config, EditAnywhere, Category = "Export")
-    FString DataExportPath;
 };

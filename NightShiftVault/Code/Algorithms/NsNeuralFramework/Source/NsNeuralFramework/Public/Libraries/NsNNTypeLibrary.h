@@ -86,13 +86,9 @@ struct FNsTrainGymSetup
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TSoftObjectPtr<class UWorld> Level;
 
-    /** Initial Spawn Location */
+    /** Spawn pool composed has location and rotation */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FVector InitialSpawnLocation;
-
-    /** Initial Spawn Rotation */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FRotator InitialSpawnRotation;
+    TMap<FVector, FRotator> SpawnPool;
 };
 
 /**

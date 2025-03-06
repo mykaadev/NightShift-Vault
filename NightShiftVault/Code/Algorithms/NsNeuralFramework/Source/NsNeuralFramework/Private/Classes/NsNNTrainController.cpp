@@ -1,9 +1,15 @@
 ﻿// Copyright (C) 2024 mykaa. All rights reserved.
 
 #include "NsNNTrainController.h"
-
 #include "Networks/NsNNArchitecture.h"
 #include "NsNNSessionSubsystem.h"
+#include "NsNNUserSettings.h"
+#if WITH_EDITOR
+#include "Kismet2/DebuggerCommands.h"
+#include "LevelEditor.h"
+#include "Selection.h"
+#include "SLevelViewport.h"
+#endif // WITH_EDITOR
 
 ANsNNTrainController::ANsNNTrainController()
   : Fitness(0)
@@ -17,6 +23,7 @@ void ANsNNTrainController::Tick(float DeltaTime)
     {
         if (NeuralNetwork != nullptr && NeuralTrainSubsystem->IsTraining())
         {
+            UpdateFitness(DeltaTime);
             if (HasFailedAndShouldForceSkip())
             {
                 NeuralTrainSubsystem->EndCurrentEvaluation();
@@ -55,6 +62,28 @@ void ANsNNTrainController::Initialize_Implementation()
     }
 }
 
+void ANsNNTrainController::OnControllerSpawn_Implementation(class UClass* const InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation)
+{
+    if (UWorld* const World = GetWorld())
+    {
+        FActorSpawnParameters SpawnInfo;
+        SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        if (APawn* const SpawnedPawn = World->SpawnActor<APawn>(InActorToSpawnAndControl, InSpawnLocation, InSpawnRotation, SpawnInfo))
+        {
+            Possess(SpawnedPawn);
+#if WITH_EDITOR
+            if (const UNsNNUserSettings* const UserSettings = GetDefault<UNsNNUserSettings>())
+            {
+                if (UserSettings->bAutoFocus)
+                {
+                    FocusControlledPawn();
+                }
+            }
+#endif // WITH_EDITOR
+        }
+    }
+}
+
 void ANsNNTrainController::OnResetRequested_Implementation()
 {
     // Should be extended by children
@@ -69,8 +98,39 @@ float ANsNNTrainController::ComputeFitness_Implementation()
     return Fitness;
 }
 
+void ANsNNTrainController::UpdateFitness_Implementation(const float InDeltaTime)
+{
+    // Should be overriden by children
+}
+
 bool ANsNNTrainController::HasFailedAndShouldForceSkip_Implementation()
 {
     // Should be overriden by children
     return false;
 }
+
+#if WITH_EDITOR
+void ANsNNTrainController::FocusControlledPawn() const
+{
+    if (GEditor != nullptr && GetPawn() != nullptr)
+    {
+        GEditor->SelectActor(GetPawn(), true, true);
+        const USelection* const Selection = GEditor->GetSelectedActors();
+        if (Selection != nullptr &&  Selection->Num() == 1)
+        {
+            if (FPlayWorldCommandCallbacks::IsInPIE())
+            {
+                GEditor->RequestToggleBetweenPIEandSIE();
+            }
+
+            FLevelEditorModule& LevelEditorModule = FModuleManager::GetModuleChecked<FLevelEditorModule>(TEXT("LevelEditor"));
+            if (const TSharedPtr<SLevelViewport> ActiveLevelViewport = LevelEditorModule.GetFirstActiveLevelViewport())
+            {
+                FLevelEditorViewportClient& LevelViewportClient = ActiveLevelViewport->GetLevelViewportClient();
+                LevelViewportClient.SetActorLock(GetPawn());
+                LevelViewportClient.MoveCameraToLockedActor();
+            }
+        }
+    }
+}
+#endif //WITH_EDITOR
