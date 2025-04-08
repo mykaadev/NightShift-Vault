@@ -62,7 +62,7 @@ void ANsNNTrainController::Initialize_Implementation()
     }
 }
 
-void ANsNNTrainController::OnControllerSpawn_Implementation(class UClass* const InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation)
+void ANsNNTrainController::OnControllerSpawn_Implementation(class UClass* InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation)
 {
     if (UWorld* const World = GetWorld())
     {

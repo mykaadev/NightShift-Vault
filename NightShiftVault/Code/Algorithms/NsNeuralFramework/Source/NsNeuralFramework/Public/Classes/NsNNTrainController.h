@@ -30,8 +30,8 @@ public:
 
     /** On Controller Spawn */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
-    void OnControllerSpawn(const class UClass* const InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation);
-    virtual void OnControllerSpawn_Implementation(class UClass* const InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation);
+    void OnControllerSpawn(class UClass* InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation);
+    virtual void OnControllerSpawn_Implementation(class UClass* InActorToSpawnAndControl, const FVector& InSpawnLocation, const FRotator& InSpawnRotation);
 
     /** On Reset Requested */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "NN Neural Controller")
