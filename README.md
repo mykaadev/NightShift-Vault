@@ -93,11 +93,14 @@ Unreal Engine 5.2+
 
 ##### Method 2 - Pushing with git
 
-To add the full vault run the following command in your UEGame/Plugins/ root
+To add the full vault run the following command in your UEGame.uproject root
 ``` sh
-git clone https://github.com/mykaadev/NightShift-Vault.git
-cd NightShift-Vault
+git submodule add https://github.com/mykaadev/NightShift-Vault.git Plugins/NightShiftVault
 git submodule update --init --recursive
+
+git add .gitmodules Plugins/NightShiftVault
+git commit -m "Added NightShiftVault plugin vault as submodule"
+git push
 ```
 
 > [!NOTE]  
