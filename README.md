@@ -95,7 +95,8 @@ Unreal Engine 5.2+
 
 To add the full vault run the following command in your UEGame/Plugins/ root
 ``` sh
-git submodule add https://github.com/mykaadev/NightShift-Vault NightShiftVault
+git clone https://github.com/mykaadev/NightShift-Vault.git
+cd NightShift-Vault
 git submodule update --init --recursive
 ```
 
