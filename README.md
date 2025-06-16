@@ -36,10 +36,10 @@
 ## 📦 Vault Distribution
 <div align="left">
 Algorithms: 🟨🟨<br> 
-Gameplay: 🟧🟧🟧<br>
-Tools: 🟩🟩🟩<br>
-Visuals: 🟦🟦<br>
-Utilities: 🟪🟪🟪🟪
+Gameplay: 🟧🟧🟧🟧<br>
+Tools: 🟩🟩<br>
+Utility: 🟪🟪 <br>
+Visuals: 🟦🟦🟦
 </div>
 
 
@@ -50,34 +50,32 @@ Utilities: 🟪🟪🟪🟪
 <table>
   <tr>
     <th>AI</th>
-    <td>Genetic Algorithms</td>
+    <td>Neural Framework 🪛</td>
     <td>Utility AI</td>
   </tr>
   <tr>
     <th>Gameplay</th>
-    <td>Save Wizard ⚡</td>
-    <td>Atmosphere 🔒</td>
+    <td>Save Manager ⏳</td>
     <td>Achievements ⏳</td>
     <td>Interaction</td>
+    <td>UI Framework 🔒</td>
   </tr>
   <tr>
     <th>Tools</th>
-    <td>Debug Console 🪛</td>
-    <td>Dialogue Editor 🪛</td>
+    <td>Debug Console 🔒</td>
+    <td>Dialogue Editor 🔒</td>
     <td>Project Maid 🔒</td>
   </tr>
-  <tr>
-    <th>Visuals</th>
-    <td>Text Animation ⚡</td>
-    <td>Tween Animations</td>
   </tr>
     <tr>
     <th>Utility</th>
-    <td>Neural Framework</td>
-    <td>Wave Function Collapse ⏳</td>
-    <td>Screen Recorder ⏳</td>
-    <td>Feedback ⏳</td>
+    <td>Data Handler</td>
   </tr>
+  <tr>
+    <th>Visuals</th>
+    <td>Atmosphere 🔒</td>
+    <td>Text Animations 🔒</td>
+    <td>Tween Animations</td>
 </table>
 
 ## ⚙️ Requirements
