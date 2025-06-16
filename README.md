@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/mykaadev/NightShift-Vault/releases"><img src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Git/Banner.png" alt="VaultLogo"></a>
+  <a href="https://github.com/mykaadev/NightShift-Vault/releases"><img src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Banner.png" alt="VaultLogo"></a>
 </h1>
 
 <h4 align="center">A Unreal Engine Plugin Vault to help other devs with their creations.</h4>
@@ -86,7 +86,7 @@ Unreal Engine 5.2+
 ## 🛠️ Installation
 ##### Downloading and installing steps:
 
-1. **[Download](https://github.com/mykaadev/NightShift-Vault/releases)** the latest version of the config.
+1. **[Download](https://github.com/mykaadev/NightShift-Vault)** the latest version of the config.
 2.  Open the _archive_ and **extract** the contents of the to your unreal engine project plugins folder <br>
 `\...\UEGame\Plugins\*`
 3. Add them to your **UEGame.uproject**
@@ -94,11 +94,9 @@ Unreal Engine 5.2+
 5. And that's it! Fire up your project!
 
 > [!NOTE]  
-> The NightShiftVault.uplugin works has a container for all the other plugins
+> The NightShiftVault works has a container for all the other plugins
 > You can always pick and choose what your project needs! Keep in mind that some plugins might have dependencies from other plugins!
 
-<div> <img width="100%" src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Git/PluginSetup.png" alt="LOTR"> </div>
- 
 ## ❤️ Credits
 > [!IMPORTANT]  
 > Be part of the project! Request stuff! Add stuff!
