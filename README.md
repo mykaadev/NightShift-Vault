@@ -92,16 +92,16 @@ Unreal Engine 5.2+
 5. And that's it! Fire up your project!
 
 ##### Method 2 - Pushing with git
+
+To add the full vault run the following command in your UEGame/Plugins/ root
 ``` sh
-git submodule add https://github.com/mykaadev/NightShift-Vault Plugins/NightShiftVault
+git submodule add https://github.com/mykaadev/NightShift-Vault NightShiftVault
 git submodule update --init --recursive
 ```
 
 > [!NOTE]  
 > The NightShiftVault works has a container for all the other plugins
 > You can always pick and choose what your project needs! Keep in mind that some plugins might have dependencies from other plugins!
-
-To add the full vault run the following command in your UEGame.uproject root
 
 
 ## ❤️ Credits
