@@ -75,7 +75,7 @@ Visuals: 🟦🟦🟦
     <th>Visuals</th>
     <td>Atmosphere 🔒</td>
     <td>Text Animations 🔒</td>
-    <td>Tween Animations</td>
+    <td>Tween Animations ⏳</td>
 </table>
 
 ## ⚙️ Requirements
