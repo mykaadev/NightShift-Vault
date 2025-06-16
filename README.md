@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/mykaadev/NightShift-Vault/releases"><img src="https://raw.githubusercontent.com/mykaadev/NightShift-Vault/refs/heads/main/NightShiftVault/_Core/NightShiftVault/Resources/Banner.png" alt="VaultLogo"></a>
+  <a href="https://github.com/mykaadev/NightShift-Vault"><img src="https://github.com/mykaadev/NightShift-Vault/blob/617ef40797515877d05d9b058ed9627609adc041/Resources/Banner.png" alt="VaultLogo"></a>
 </h1>
 
 <h4 align="center">A Unreal Engine Plugin Vault to help other devs with their creations.</h4>
