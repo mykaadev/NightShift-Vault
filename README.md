@@ -84,7 +84,7 @@ Utilities: 🟪🟪🟪🟪
 Unreal Engine 5.2+
 
 ## 🛠️ Installation
-##### Downloading and installing steps:
+##### Method 1 - Downloading
 
 1. **[Download](https://github.com/mykaadev/NightShift-Vault)** the latest version of the config.
 2.  Open the _archive_ and **extract** the contents of the to your unreal engine project plugins folder <br>
@@ -93,9 +93,18 @@ Unreal Engine 5.2+
 4. Head to your **UEGame.uproject** and click in **Genrate Visual Studio Project Files**
 5. And that's it! Fire up your project!
 
+##### Method 2 - Pushing with git
+``` sh
+git submodule add https://github.com/mykaadev/NightShift-Vault Plugins/NightShiftVault
+git submodule update --init --recursive
+```
+
 > [!NOTE]  
 > The NightShiftVault works has a container for all the other plugins
 > You can always pick and choose what your project needs! Keep in mind that some plugins might have dependencies from other plugins!
+
+To add the full vault run the following command in your UEGame.uproject root
+
 
 ## ❤️ Credits
 > [!IMPORTANT]  
