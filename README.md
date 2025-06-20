@@ -69,7 +69,8 @@ Visuals: 🟦🟦🟦
   </tr>
     <tr>
     <th>Utility</th>
-    <td>Data Handler</td>
+    <td>Data Handler ⏳</td>
+    <td>Spyglass ⏳</td>
   </tr>
   <tr>
     <th>Visuals</th>
