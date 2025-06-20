@@ -34,3 +34,6 @@
 [submodule "Code/Utility/NsDataHandler"]
 	path = Code/Utility/NsDataHandler
 	url = https://github.com/mykaadev/NsDataHandler
+[submodule "Code/Utility/NsSpyglass"]
+	path = Code/Utility/NsSpyglass
+	url = https://github.com/mykaadev/NsSpyglass
