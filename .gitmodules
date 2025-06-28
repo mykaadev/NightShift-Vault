@@ -37,3 +37,6 @@
 [submodule "Code/Utility/NsSpyglass"]
 	path = Code/Utility/NsSpyglass
 	url = https://github.com/mykaadev/NsSpyglass.git
+[submodule "Code/Gameplay/NsBackpack"]
+	path = Code/Gameplay/NsBackpack
+	url = https://github.com/mykaadev/NsBackpack.git
