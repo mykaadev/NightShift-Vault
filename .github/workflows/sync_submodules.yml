@@ -1,0 +1,56 @@
+# .github/workflows/sync_submodules.yml
+#
+# Keeps every submodule fast-forwarded to its main branch
+# and pushes the new SHAs back to NightShift-Vault.
+#
+# Prerequisites
+# ─────────────
+# 1. Add a fine-grained personal-access token (PAT) with
+#    “Contents → Read” on each private plugin repo.
+# 2. Save that token in this repo’s Secrets as  SUBMODULE_PAT
+# 3. In each entry of .gitmodules, add:
+#        branch = main
+#
+# It will then run nightly (03:00 UTC) or on manual dispatch.
+# If no submodule changed, it exits without committing.
+
+name: Sync submodules to main
+
+on:
+  workflow_dispatch:           # manual run button
+  schedule:
+    - cron: '0 3 * * *'        # every day @03:00 UTC
+
+permissions:
+  contents: write              # needed to push updated pointers
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣  Checkout this repo *with* submodules, using the PAT
+      - name: Checkout Vault + submodules
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SUBMODULE_PAT }}  # PAT grants read on private plugins
+          submodules: recursive
+          fetch-depth: 0                       # full history so Git can fast-forward
+
+      # 2️⃣  Fast-forward every submodule to its tracked branch
+      - name: Update submodules to latest main
+        run: git submodule update --remote --recursive
+
+      # 3️⃣  Commit & push only if anything actually moved
+      - name: Commit and push pointer bumps (if any)
+        run: |
+          if git diff --quiet; then
+            echo "No submodule updates; exiting."
+            exit 0
+          fi
+
+          git config --global user.name  "🤖 Submodule Sync Bot"
+          git config --global user.email "actions@github.com"
+
+          git commit -am "chore: bump submodules to latest main"
+          git push origin HEAD:main
