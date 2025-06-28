@@ -1,7 +1,6 @@
 # .github/workflows/sync_submodules.yml
 #
 # ➜ Keeps every submodule fast-forwarded to its `main` branch
-# ➜ Runs every 5 min *and* on manual “Run workflow”
 # ➜ Commits & pushes pointer bumps only when something changed
 #
 # Requirements
