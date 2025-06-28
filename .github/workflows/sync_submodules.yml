@@ -1,51 +1,56 @@
 # .github/workflows/sync_submodules.yml
 #
-# Keeps every submodule fast-forwarded to its main branch
-# and pushes the new SHAs back to NightShift-Vault.
+# ➜ Keeps every submodule fast-forwarded to its `main` branch
+# ➜ Runs every 5 min *and* on manual “Run workflow”
+# ➜ Commits & pushes pointer bumps only when something changed
 #
-# Prerequisites
-# ─────────────
-# 1. Add a fine-grained personal-access token (PAT) with
-#    “Contents → Read” on each private plugin repo.
-# 2. Save that token in this repo’s Secrets as  SUBMODULE_PAT
-# 3. In each entry of .gitmodules, add:
-#        branch = main
-#
-# It will then run nightly (03:00 UTC) or on manual dispatch.
-# If no submodule changed, it exits without committing.
+# Requirements
+# ────────────────────────────────────────────────
+# ① PAT (fine-grained, “Contents → Read” on every private plugin repo)
+#      →  store as repo secret  SUBMODULE_PAT
+# ② Each entry in .gitmodules includes  branch = main
+# ③ This repo’s default branch is  main
 
-name: Sync submodules to main
+name: Sync submodules
 
 on:
-  workflow_dispatch:           # manual run button
+  workflow_dispatch:                  # manual trigger
   schedule:
-    - cron: '0 3 * * *'        # every day @03:00 UTC
+    - cron: '*/30 * * * *'             # every 5 minutes (GitHub’s min reliable)
 
 permissions:
-  contents: write              # needed to push updated pointers
+  contents: write                     # to push updated submodule SHAs
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣  Checkout this repo *with* submodules, using the PAT
-      - name: Checkout Vault + submodules
+      # 1️⃣  Checkout Vault + submodules using PAT
+      - name: Checkout repo with submodules
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.SUBMODULE_PAT }}  # PAT grants read on private plugins
+          token: ${{ secrets.SUBMODULE_PAT }}   # PAT can read private plugin repos
           submodules: recursive
-          fetch-depth: 0                       # full history so Git can fast-forward
+          fetch-depth: 0                        # full history for fast-forward
 
-      # 2️⃣  Fast-forward every submodule to its tracked branch
+      # 2️⃣  Show which branches Git thinks each submodule should track
+      - name: Show submodule branch config
+        run: git config -f .gitmodules --name-only --get-regexp 'branch'
+
+      # 3️⃣  Fast-forward every submodule
       - name: Update submodules to latest main
-        run: git submodule update --remote --recursive
+        run: git submodule update --remote --recursive --verbose
 
-      # 3️⃣  Commit & push only if anything actually moved
-      - name: Commit and push pointer bumps (if any)
+      # 4️⃣  List resulting submodule HEADs for debug purposes
+      - name: List submodule SHAs after update
+        run: git submodule status --recursive
+
+      # 5️⃣  Commit + push only if something actually changed
+      - name: Commit & push pointer bumps (if any)
         run: |
           if git diff --quiet; then
-            echo "No submodule updates; exiting."
+            echo "✅ No submodule updates – nothing to commit."
             exit 0
           fi
 
