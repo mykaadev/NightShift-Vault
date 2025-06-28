@@ -16,7 +16,7 @@ name: Sync submodules
 on:
   workflow_dispatch:                  # manual trigger
   schedule:
-    - cron: '*/30 * * * *'             # every 5 minutes (GitHub’s min reliable)
+    - cron: '0 3 * * *'               # vault is updated always at 3 AM
 
 permissions:
   contents: write                     # to push updated submodule SHAs
