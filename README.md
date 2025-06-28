@@ -1,4 +1,4 @@
-<h1 align="center">
+<h1 align="center"> 
   <br>
   <a href="https://github.com/mykaadev/NightShift-Vault"><img src="https://github.com/mykaadev/NightShift-Vault/blob/617ef40797515877d05d9b058ed9627609adc041/Resources/Banner.png" alt="VaultLogo"></a>
 </h1>
