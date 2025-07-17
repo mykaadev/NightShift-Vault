@@ -70,13 +70,13 @@ Visuals: 🟦🟦🟦
     <tr>
     <th>Utility</th>
     <td>Data Handler ⏳</td>
-    <td>Spyglass ⏳</td>
+    <td>Spyglass</td>
   </tr>
   <tr>
     <th>Visuals</th>
     <td>Atmosphere 🔒</td>
     <td>Text Animations 🔒</td>
-    <td>Tween Animations ⏳</td>
+    <td>Tween Animations</td>
 </table>
 
 ## ⚙️ Requirements
