@@ -14,10 +14,6 @@
 	path = Code/Gameplay/NsInteraction
 	url = https://github.com/mykaadev/NsInteraction.git
 	branch = main
-[submodule "Code/Gameplay/NsAchievements"]
-	path = Code/Gameplay/NsAchievements
-	url = https://github.com/mykaadev/NsAchievements.git
-	branch = main
 [submodule "Code/Gameplay/NsSaveWizard"]
 	path = Code/Gameplay/NsSaveWizard
 	url = https://github.com/mykaadev/NsSaveWizard.git
