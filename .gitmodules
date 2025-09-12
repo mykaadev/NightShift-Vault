@@ -10,6 +10,10 @@
 	path = Code/Algorithms/NsSynapse
 	url = https://github.com/mykaadev/NsSynapse.git
 	branch = main
+[submodule "Code/Gameplay/NsDungeonMaster"]
+	path = Code/Gameplay/NsDungeonMaster
+	url = https://github.com/mykaadev/NsDungeonMaster.git
+	branch = main
 [submodule "Code/Gameplay/NsInteraction"]
 	path = Code/Gameplay/NsInteraction
 	url = https://github.com/mykaadev/NsInteraction.git
