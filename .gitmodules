@@ -52,4 +52,4 @@
 	branch = main
 [submodule "Code/Gameplay/NsDungeonMaster"]
 	path = Code/Gameplay/NsDungeonMaster
-	url = https://www.github.com/mykaadev/NsDungeonMaster.git
+	url = https://github.com/mykaadev/NsDungeonMaster.git
